@@ -88,8 +88,10 @@
 
 
 <body>
-<h3>Taxi Web System</h3> <input id="pac-input" type="text" name="destination" placeholder="From"><input id="pac-dest" type="text" name="destination" placeholder="Where to go">
-
+<h3>Taxi Web System</h3>
+<form action="/processInput" method="post">
+<input id="pac-input" type="text" name="origin" placeholder="From"><input id="pac-dest" type="text" name="destination" placeholder="Where to go"><button type="submit">Book</button>
+</form>
 <div class="pac-card" id="pac-card">
     <div id="pac-container">
 <!--        <input id="pac-input" type="text"-->

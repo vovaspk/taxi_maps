@@ -18,6 +18,7 @@ public class LoginController {
     public String login(User user, Model model){
         User user1 = userDao.findByUserName(user.getUserName());
         if(user1 != null){
+            model.addAttribute("user", user);
             return "main";
         }
         return "redirect:/login";
@@ -25,6 +26,6 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login(Model model){
-        return "main";
+        return "login";
     }
 }
