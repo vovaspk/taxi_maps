@@ -1,23 +1,35 @@
 package com.taximaps.server.maps;
 
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
+import com.google.gson.*;
+import com.google.maps.*;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.DistanceMatrix;
+import com.google.maps.model.Fare;
+import com.google.maps.model.TravelMode;
+import org.joda.time.ReadableDateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class JsonReader {
 
-    private static final double EARTH_RADIUS = 6371.; // Earth redius
+    private static final String API_KEY = "AIzaSyBR4RT24iLNmr74yE168KRWz5qdjr3NhVc";
+    private static final String baseUrl = "http://maps.googleapis.com/maps/api/geocode/json";// путь к Geocoding API по HTTP
 
     private static String readAll(final Reader rd) throws IOException {
         final StringBuilder sb = new StringBuilder();
@@ -42,7 +54,6 @@ public class JsonReader {
 
 
     private static Point getPoint(final String address) throws IOException, JSONException {
-        final String baseUrl = "http://maps.googleapis.com/maps/api/geocode/json";// путь к Geocoding API по HTTP
         final Map<String, String> params = Maps.newHashMap();
         params.put("sensor", "false");// указывает, исходит ли запрос на геокодирование от устройства с датчиком
         // местоположения
@@ -97,7 +108,7 @@ public class JsonReader {
         return paramsUrl;
     }
 
-    public static String sendRequest(String origin, String destination) throws IOException {
+    public static String sendRequest(String origin, String destination) throws IOException, InterruptedException, ApiException {
         final String baseUrl = "https://maps.googleapis.com/maps/api/directions/json";// путь к Geocoding API по
         // HTTPS
         final Map<String, String> params = Maps.newHashMap();
@@ -120,7 +131,60 @@ public class JsonReader {
         final String distance = location.getJSONObject("distance").getString("text");
         final String duration = location.getJSONObject("duration").getString("text");
         System.out.println(distance + "\n" + duration);
-        return distance + ", " + duration;
+        ////////////////////////////////////////////////////////////
+        DirectionsApiRequest req = DirectionsApi.getDirections(getGeoContext(), origin, destination);
+        DirectionsResult route = req.await();
+        String routeResult = route.routes[0].toString();
+        /////////////////////////////////////////////////////////////
+        return routeResult;
+        // now return location.toString();
+        //return distance + ", " + duration;
+    }
+
+    public static String getDriveDistanceAndTime(String startAddress, String endAddress) throws InterruptedException, ApiException, IOException {
+        DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(getGeoContext());
+        DistanceMatrix result = req.origins(startAddress)
+                .destinations(endAddress)
+                .mode(TravelMode.DRIVING)
+                .avoid(DirectionsApi.RouteRestriction.TOLLS)
+                .language("en-US")
+                .await();
+
+        long distApart = result.rows[0].elements[0].distance.inMeters;
+        String duration = result.rows[0].elements[0].duration.toString();
+       //NULL-> BigDecimal fare = result.rows[0].elements[0].fare.value;
+
+
+        return distApart + ", " + duration;
+    }
+
+    public static String getDirectionResult(String startAddress, String endAddress) throws InterruptedException, ApiException, IOException {
+        DirectionsApiRequest request = DirectionsApi.newRequest(getGeoContext());
+        DirectionsResult result = request
+                .origin(startAddress)
+                .destination(endAddress)
+                .mode(TravelMode.DRIVING)
+                .await();
+
+
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String jsonResult = gson.toJson(result);
+        JsonParser jp = new JsonParser();
+        JsonElement element = jp.parse(jsonResult);
+        System.out.println(gson.toJson(element));
+        String res = gson.toJson(element);
+        //return origin and dest
+        return res;
+    }
+
+
+
+    private static GeoApiContext getGeoContext() {
+        GeoApiContext geoApiContext = new GeoApiContext.Builder()
+                .apiKey(API_KEY)
+                .build();
+        return geoApiContext;
     }
 
 }
