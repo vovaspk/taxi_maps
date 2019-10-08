@@ -5,9 +5,26 @@
     <title>Hello</title>
 </head>
 <body>
+<div id="originPlaceId">
+<p th:text="${originPlaceId}"></p>
+</div>
+<div id="destPlaceId">
+<p th:text="${destPlaceId}"></p>
+</div>
 Response should be here:
-<!--To get from <p th:text="${origin}"></p> to <p th:text="${destination}"></p> you need: <p th:text="${response}"></p>-->
-DISTANTION(meters), duration: <p th:text="${dist}"> </p>
+To get from
+<div id="origin">
+<p th:text="${origin}"></p>
+</div>
+to
+<div id="destination">
+<p th:text="${destination}"></p>
+</div>
+    you need:
+<div id="response">
+<!--<p th:text="${response}"></p>-->
+</div>
+    DISTANTION(meters), duration: <p th:text="${dist}"> </p>
 ////////////////////////////////////////////////////////////////////////
 HERE SHOULD BE DIRECTION RESULT:
 <div id="start" >start: <p th:text="${start}"></p> </div>
@@ -16,13 +33,20 @@ HERE SHOULD BE DIRECTION RESULT:
 MAP NEXT <button id="showDirection" type="submit">Show Direction</button>
 <div id="map" style="width: 500px; height: 400px;"></div>
 <script>
-    initMap();
+
     var map;
     var start = document.getElementById("start");
     var end = document.getElementById("end");
+    var origin = document.getElementById("origin").innerText;
+    var destination = document.getElementById("destination").innerText;
+    var originPlaceId = document.getElementById("originPlaceId").innerText;
+    var destPlaceId = document.getElementById("destPlaceId").innerText;
+    initMap();
     function initMap() {
         var directionsService = new google.maps.DirectionsService();
         var directionsRenderer = new google.maps.DirectionsRenderer();
+
+
 
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 12,
@@ -41,8 +65,8 @@ MAP NEXT <button id="showDirection" type="submit">Show Direction</button>
         console.log('goes to here 2');
         directionsService.route(
             {
-                origin: {query: "49.2331, 28.4682"},
-                destination: {query: "48.2331, 27.4682"}, //var end doesnt work here and request not found, should pass ltn and lng of start and dest and works fine
+                origin: {query: document.getElementById("originPlaceId").innerText},
+                destination: {query: document.getElementById("destPlaceId").innerText}, //var end doesnt work here and request not found, should pass ltn and lng of start and dest and works fine
                 travelMode: 'DRIVING'
             },
             function(response, status) {

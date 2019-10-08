@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 
-import static com.taximaps.server.maps.JsonReader.getDirectionResult;
-import static com.taximaps.server.maps.JsonReader.getDriveDistanceAndTime;
+import static com.taximaps.server.maps.JsonReader.*;
 
 @Controller
 public class MainController {
@@ -24,11 +23,15 @@ public class MainController {
 
     @PostMapping(value = "/processInput", produces = "text/html")
     public String getOriginAndDestFromUser(@RequestParam String origin, @RequestParam String destination, Model model) throws IOException, ApiException, InterruptedException {
-        String response = JsonReader.sendRequest(origin, destination);
+       // String response = JsonReader.sendRequest(origin, destination);
         // atach response to model ?
         model.addAttribute("origin", origin);
         model.addAttribute("destination", destination);
-        model.addAttribute("response", response);
+      //  model.addAttribute("response", response);
+        String originPlaceId = getGeocodeCoordinats(origin);
+        String destPlaceId = getGeocodeCoordinats(destination);
+        model.addAttribute("originPlaceId", originPlaceId);
+        model.addAttribute("destPlaceId", destPlaceId);
         //draw route on map in html
         //return the html page with map and route on it
         return "responsePage";

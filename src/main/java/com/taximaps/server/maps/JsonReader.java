@@ -6,10 +6,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.*;
 import com.google.maps.*;
 import com.google.maps.errors.ApiException;
-import com.google.maps.model.DirectionsResult;
-import com.google.maps.model.DistanceMatrix;
-import com.google.maps.model.Fare;
-import com.google.maps.model.TravelMode;
+import com.google.maps.model.*;
 import org.joda.time.ReadableDateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -176,6 +173,13 @@ public class JsonReader {
         String res = gson.toJson(element);
         //return origin and dest
         return res;
+    }
+
+    public static String getGeocodeCoordinats(String address) throws InterruptedException, ApiException, IOException {
+        GeocodingApiRequest request = GeocodingApi.newRequest(getGeoContext()).address(address);
+        GeocodingResult result = request.await()[0];
+        return result.geometry.location.toString();
+
     }
 
 
