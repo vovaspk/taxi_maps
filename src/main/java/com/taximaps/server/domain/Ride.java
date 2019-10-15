@@ -2,22 +2,32 @@ package com.taximaps.server.domain;
 
 import com.google.maps.model.LatLng;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Time;
+import java.util.Date;
 
-//@Entity
+@Entity
 public class Ride {
-  //  @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Time rideTime;
+    private Date rideDate;
     private LatLng startPoint;
     private LatLng destination;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="user_id")
     private User user;
 
+    private RideStatus status;
+    private double price;
+//TODO rozibratys with this class to perform in database
+// and maybe cut rideStatus from ride and add rideStatus to car
+// and run add markers(drivers) randomly in city and find nearest and find his arrivaltime
+// and think about flow between main ,find driver,  then save ride, and where to go
+// and think about rideStatus resting, on his way to client, riding with client or without rideStatus
+// if rideStatus will exists then think about checking the status of your driver or car when you book a ride
+// and class car with status
     public User getUser() {
         return user;
     }
@@ -34,8 +44,7 @@ public class Ride {
         this.status = status;
     }
 
-    private RideStatus status;
-    private double price;
+
 
     public Long getId() {
         return id;
@@ -51,6 +60,14 @@ public class Ride {
 
     public void setRideTime(Time rideTime) {
         this.rideTime = rideTime;
+    }
+
+    public Date getRideDate() {
+        return rideDate;
+    }
+
+    public void setRideDate(Date rideDate) {
+        this.rideDate = rideDate;
     }
 
     public LatLng getStartPoint() {
