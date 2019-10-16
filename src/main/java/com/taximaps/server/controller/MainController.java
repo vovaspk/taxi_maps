@@ -9,10 +9,12 @@ import com.taximaps.server.service.RidesService;
 import com.taximaps.server.service.UserService;
 import com.taximaps.server.service.impl.RidesServiceImpl;
 import com.taximaps.server.service.impl.UserServiceImpl;
+import com.taximaps.server.utils.pages.PagesConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -39,26 +41,31 @@ public class MainController {
 
     @GetMapping(value = {"/map", "/main"}, produces = "text/html")
     public String map (Model model){
-        return "main";
+        return PagesConstants.MAIN_PAGE;
     }
 
     @GetMapping("/rides")
     public String getRidesList(User user, Model model){
-        List<Ride> userRides = ridesService.findRidesByUser(user.getUserName());
+        List<Ride> userRides = ridesService.findRidesByUserId(user.getId());
         model.addAttribute("userRides", userRides);
-        return "rides";
+        return PagesConstants.RIDES_PAGE;
     }
 
-    //MAYBE
-//    @GetMapping("/rides/{id}")
-//    public String getRide(){
-//
-//    }
-//
-//    @GetMapping("/profile/{id}")
-//    public String profile(){
-//
-//    }
+    //this will be page of specific ride
+    @GetMapping("/rides/{id}")
+    public String getRide(Model model, @PathVariable Long id){
+        Ride ride = ridesService.findRideById(id);
+        model.addAttribute("ride", ride);
+        return PagesConstants.SPECIFIC_RIDE_PAGE;
+
+    }
+
+    @GetMapping("/profile/{name}")
+    public String profile(Model model, @PathVariable String name){
+        User user = (User) userService.loadUserByUsername(name);
+        model.addAttribute("user", user);
+        return PagesConstants.PROFILE_PAGE;
+    }
 
     @PostMapping(value = "/processInput", produces = "text/html")
     public String getOriginAndDestFromUser(@RequestParam String origin, @RequestParam String destination, Model model) throws IOException, ApiException, InterruptedException {
@@ -75,14 +82,14 @@ public class MainController {
         model.addAttribute("destPlaceId", destPlaceId);
         //draw route on map in html
         //return the html page with map and route on it
-        return "responsePage";
+        return PagesConstants.RESPONSE_PAGE;
 
     }
 
     @GetMapping("/getDist")
     public String getDist(String startAddress, String endAddress, Model model) throws InterruptedException, ApiException, IOException {
         model.addAttribute("dist",getDriveDistanceAndTime(startAddress,endAddress));
-        return "responsePage";
+        return PagesConstants.RESPONSE_PAGE;
     }
 
     @GetMapping("/getDirect")
@@ -91,7 +98,7 @@ public class MainController {
         model.addAttribute("start", startAddress);
         model.addAttribute("end", endAddress);
         model.addAttribute("direct", directionJson);
-        return "responsePage";
+        return PagesConstants.RESPONSE_PAGE;
     }
 
 

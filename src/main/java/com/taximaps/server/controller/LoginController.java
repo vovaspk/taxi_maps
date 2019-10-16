@@ -2,6 +2,7 @@ package com.taximaps.server.controller;
 
 import com.taximaps.server.dao.UserDao;
 import com.taximaps.server.domain.User;
+import com.taximaps.server.utils.pages.PagesConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +27,6 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login(Model model){
-        return "login";
+        return PagesConstants.LOGIN_PAGE;
     }
 }

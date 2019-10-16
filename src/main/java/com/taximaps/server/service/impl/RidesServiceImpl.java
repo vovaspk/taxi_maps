@@ -17,7 +17,12 @@ public class RidesServiceImpl implements RidesService {
     public List<Ride> findAll(){
         return ridesDao.findAll();
     }
-    public List<Ride> findRidesByUser(String userName){
-        return ridesDao.findRidesByUser(userName);
+    public List<Ride> findRidesByUserId(Long id){
+        return ridesDao.findRidesByUserId(id);
+    }
+
+    @Override
+    public Ride findRideById(Long id) {
+        return ridesDao.findRideById(id);
     }
 }

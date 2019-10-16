@@ -1,19 +1,19 @@
 package com.taximaps.server.domain;
 
 import com.google.maps.model.LatLng;
+import com.taximaps.server.domain.status.CarStatus;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
 public class Car {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private LatLng location;
-    private RideStatus rideStatus;
-
+    @Enumerated(EnumType.STRING)
+    private CarStatus carStatus;
 
     public Car() {
     }
@@ -42,11 +42,11 @@ public class Car {
         this.location = location;
     }
 
-    public RideStatus getRideStatus() {
-        return rideStatus;
+    public CarStatus getCarStatus() {
+        return carStatus;
     }
 
-    public void setRideStatus(RideStatus rideStatus) {
-        this.rideStatus = rideStatus;
+    public void setCarStatus(CarStatus carStatus) {
+        this.carStatus = carStatus;
     }
 }

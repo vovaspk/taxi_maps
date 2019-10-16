@@ -1,7 +1,9 @@
 package com.taximaps.server.service.impl;
 
+import com.google.maps.model.LatLng;
 import com.taximaps.server.dao.CarDao;
 import com.taximaps.server.domain.Car;
+import com.taximaps.server.domain.status.CarStatus;
 import com.taximaps.server.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,12 +27,12 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> findCarByRideStatus() {
-        return carDao.findCarByRideStatus();
+    public List<Car> findCarsByCarStatus(CarStatus carStatus) {
+        return carDao.findCarsByCarStatus(carStatus);
     }
 
     @Override
-    public List<Car> findCarByLocation() {
-        return carDao.findCarByLocation();
+    public List<Car> findCarsByLocation(LatLng location) {
+        return carDao.findCarsByLocation(location);
     }
 }

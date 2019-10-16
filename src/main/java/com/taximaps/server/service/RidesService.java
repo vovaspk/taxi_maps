@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface RidesService {
     List<Ride> findAll();
-    List<Ride> findRidesByUser(String userName);
+    List<Ride> findRidesByUserId(Long id);
+    Ride findRideById(Long id);
 }
