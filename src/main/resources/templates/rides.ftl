@@ -5,8 +5,9 @@
     <title>Your Rides</title>
 </head>
 <body>
+here are your rides
 
-
+${userRides}
 
 </body>
 </html>

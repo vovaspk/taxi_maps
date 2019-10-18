@@ -1,26 +1,31 @@
 package com.taximaps.server.controller;
 
-import com.taximaps.server.dao.UserDao;
 import com.taximaps.server.domain.User;
+import com.taximaps.server.service.UserService;
+import com.taximaps.server.service.impl.UserServiceImpl;
 import com.taximaps.server.utils.pages.PagesConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LoginController {
 
+    private UserService userService;
     @Autowired
-    private UserDao userDao;
+    public LoginController(UserServiceImpl userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/login")
-    public String login(User user, Model model){
-        User user1 = userDao.findByUserName(user.getUserName());
-        if(user1 != null){
-            model.addAttribute("user", user);
-            return "main";
+    public String login(@RequestParam String userName, Model model){
+        User foundUser = (User) userService.loadUserByUsername(userName);
+        if(foundUser != null){
+            model.addAttribute("user", userName);
+            return "main.ftl";
         }
         return "redirect:/login";
     }

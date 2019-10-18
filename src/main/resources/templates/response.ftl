@@ -3,37 +3,128 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Hello</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            height: 80%;
+            margin-top: 20px;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #input-form{
+            margin-top: 30px;
+        }
+        #description {
+            font-family: Roboto;
+            font-size: 15px;
+            font-weight: 300;
+        }
+
+        #infowindow-content .title {
+            font-weight: bold;
+        }
+
+        #infowindow-content {
+            display: none;
+        }
+
+        #map #infowindow-content {
+            display: inline;
+        }
+
+        .pac-card {
+            margin: 10px 10px 0 0;
+            border-radius: 2px 0 0 2px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            outline: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            background-color: #fff;
+            font-family: Roboto;
+        }
+
+        #pac-container {
+            padding-bottom: 12px;
+            margin-right: 12px;
+        }
+
+        .pac-controls {
+            display: inline-block;
+            padding: 5px 11px;
+        }
+
+        .pac-controls label {
+            font-family: Roboto;
+            font-size: 13px;
+            font-weight: 300;
+        }
+
+        #pac-input {
+            background-color: #fff;
+            font-family: Roboto;
+            font-size: 15px;
+            font-weight: 300;
+            margin-left: 12px;
+            padding: 0 11px 0 13px;
+            text-overflow: ellipsis;
+            width: 400px;
+        }
+
+        #pac-input:focus {
+            border-color: #4d90fe;
+        }
+
+        #title {
+            color: #fff;
+            background-color: #4d90fe;
+            font-size: 25px;
+            font-weight: 500;
+            padding: 6px 12px;
+        }
+    </style>
 </head>
 <body>
+<#include "parts/navbar.ftl">
 <div id="originPlaceId">
-<p th:text="${originPlaceId}"></p>
+<#--<p th:text="${originPlaceId}"></p>-->
+    ${originPlaceId}
 </div>
 <div id="destPlaceId">
-<p th:text="${destPlaceId}"></p>
+<#--<p th:text="${destPlaceId}"></p>-->
+    ${destPlaceId}
 </div>
 Response should be here:
 To get from
 <div id="origin">
-<p th:text="${origin}"></p>
+<#--<p th:text="${origin}"></p>-->
+    ${origin}
 </div>
 to
 <div id="destination">
-<p th:text="${destination}"></p>
+<#--<p th:text="${destination}"></p>-->
+    ${destination}
 </div>
     you need:
 <div id="response">
-<!--<p th:text="${response}"></p>-->
+<!--<p th:text="{response}"></p>-->
 </div>
-    DISTANTION(meters), duration: <p th:text="${dist}"> </p>
-////////////////////////////////////////////////////////////////////////
-HERE SHOULD BE DIRECTION RESULT:
-<div id="start" >start: <p th:text="${start}"></p> </div>
-<div id="end">end: <p th:text="${end}"></p> </div>
-<div id="direct"><p th:text="${direct}"></p></div>
+<#--    DISTANTION(meters), duration: <p th:text="${dist}"> </p>-->
+<#--<div id="start" >start: <p th:text="${start}"></p> </div>-->
+<#--<div id="end">end: <p th:text="${end}"></p> </div>-->
+<#--<div id="direct"><p th:text="${direct}"></p></div>-->
+<#--dist: ${dist}-->
+<#--start: ${start}-->
+<#--end: ${end}-->
+<#--direct: ${direct}-->
 MAP NEXT <button id="showDirection" type="submit">Show Direction and find nearest driver</button>
-<div id="map" style="width: 500px; height: 400px;"></div>
+<div id="map"></div>
 <script>
-
     var map;
     var start = document.getElementById("start");
     var end = document.getElementById("end");

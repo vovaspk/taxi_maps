@@ -92,7 +92,8 @@
     </style>
 </head>
 <body>
-
+<#include "parts/navbar.ftl">
+<div id="nv" th:replace=""></div>
 <h3>Taxi Web System</h3>
 <div id="input-form">
     <form action="/processInput" method="post">

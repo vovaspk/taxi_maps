@@ -9,7 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class MvcConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
-        registry.addViewController("/processInput").setViewName("response");
+        registry.addViewController("/processInput").setViewName("response.ftl");
+        registry.addViewController("/main").setViewName("main.ftl");
     }
 
     @Override

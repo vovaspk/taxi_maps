@@ -13,10 +13,7 @@ import com.taximaps.server.utils.pages.PagesConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,8 +57,8 @@ public class MainController {
 
     }
 
-    @GetMapping("/profile/{name}")
-    public String profile(Model model, @PathVariable String name){
+    @GetMapping("/user/profile")
+    public String profile(Model model, @RequestBody String name){
         User user = (User) userService.loadUserByUsername(name);
         model.addAttribute("user", user);
         return PagesConstants.PROFILE_PAGE;
@@ -75,7 +72,7 @@ public class MainController {
         model.addAttribute("destination", destination);
         model.addAttribute("cars", carService.findAll());
         model.addAttribute("carLocations", CarCoordinatsUtils.getCoords());
-      //  model.addAttribute("response", response);
+
         String originPlaceId = getGeocodeCoordinats(origin);
         String destPlaceId = getGeocodeCoordinats(destination);
         model.addAttribute("originPlaceId", originPlaceId);
