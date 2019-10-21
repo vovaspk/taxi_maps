@@ -25,7 +25,7 @@ public class LoginController {
         User foundUser = (User) userService.loadUserByUsername(userName);
         if(foundUser != null){
             model.addAttribute("user", userName);
-            return "main.ftl";
+            return PagesConstants.MAIN_PAGE;
         }
         return "redirect:/login";
     }
