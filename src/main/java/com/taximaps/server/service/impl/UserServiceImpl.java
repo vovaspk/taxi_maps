@@ -1,6 +1,6 @@
 package com.taximaps.server.service.impl;
 
-import com.taximaps.server.dao.UserDao;
+import com.taximaps.server.repository.UserRepository;
 import com.taximaps.server.domain.Role;
 import com.taximaps.server.domain.User;
 import com.taximaps.server.service.UserService;
@@ -16,17 +16,17 @@ import java.util.Collections;
 @Service
 public class UserServiceImpl implements UserDetailsService, UserService {
 
-    private UserDao userDao;
+    private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
-        this.userDao = userDao;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     public boolean addUser(User user){
-        User userFromDB = userDao.findByUserName(user.getUserName());
+        User userFromDB = userRepository.findByUserName(user.getUserName());
 
         if(userFromDB != null){
             return false;
@@ -34,14 +34,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
-        userDao.save(user);
+        userRepository.save(user);
 
         return true;
     }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userDao.findByUserName(s);
+        User user = userRepository.findByUserName(s);
 
         if(user == null){
             throw new UsernameNotFoundException("User not found");

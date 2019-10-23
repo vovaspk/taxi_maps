@@ -1,7 +1,7 @@
 package com.taximaps.server.service.impl;
 
 import com.google.maps.model.LatLng;
-import com.taximaps.server.dao.CarDao;
+import com.taximaps.server.repository.CarRepository;
 import com.taximaps.server.domain.Car;
 import com.taximaps.server.domain.status.CarStatus;
 import com.taximaps.server.service.CarService;
@@ -13,26 +13,26 @@ import java.util.List;
 @Service
 public class CarServiceImpl implements CarService {
 
-    private CarDao carDao;
+    private CarRepository carRepository;
 
     @Autowired
-    public CarServiceImpl(CarDao carDao) {
-        this.carDao = carDao;
+    public CarServiceImpl(CarRepository carRepository) {
+        this.carRepository = carRepository;
     }
 
 
     @Override
     public List<Car> findAll() {
-        return carDao.findAll();
+        return carRepository.findAll();
     }
 
     @Override
     public List<Car> findCarsByCarStatus(CarStatus carStatus) {
-        return carDao.findCarsByCarStatus(carStatus);
+        return carRepository.findCarsByCarStatus(carStatus);
     }
 
     @Override
     public List<Car> findCarsByLocation(LatLng location) {
-        return carDao.findCarsByLocation(location);
+        return carRepository.findCarsByLocation(location);
     }
 }

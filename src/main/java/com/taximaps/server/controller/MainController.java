@@ -24,9 +24,7 @@ import static com.taximaps.server.maps.JsonReader.*;
 public class MainController {
 
     private UserService userService;
-
     private RidesService ridesService;
-
     private CarService carService;
 
     @Autowired
@@ -36,7 +34,7 @@ public class MainController {
         this.carService = carService;
     }
 
-    @GetMapping(value = {"/map", "/main"}, produces = "text/html")
+    @GetMapping(value = {"/","/map", "/main"}, produces = "text/html")
     public String map (Model model){
         return PagesConstants.MAIN_PAGE;
     }
@@ -58,16 +56,15 @@ public class MainController {
     }
 
     @GetMapping("/user/profile")
-    public String profile(Model model, @RequestBody String name){
+    public String profile(Model model, @RequestParam String name){
         User user = (User) userService.loadUserByUsername(name);
-        model.addAttribute("user", user);
+        model.addAttribute("name", user.getUserName());
         return PagesConstants.PROFILE_PAGE;
     }
 
     @PostMapping(value = "/processInput", produces = "text/html")
     public String getOriginAndDestFromUser(@RequestParam String origin, @RequestParam String destination, Model model) throws IOException, ApiException, InterruptedException {
        // String response = JsonReader.sendRequest(origin, destination);
-        // atach response to model ?
         model.addAttribute("origin", origin);
         model.addAttribute("destination", destination);
         model.addAttribute("cars", carService.findAll());
