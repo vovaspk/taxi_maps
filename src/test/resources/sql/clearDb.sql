@@ -1,0 +1,4 @@
+DELETE FROM user;
+DELETE FROM user_role;
+DELETE FROM ride;
+DELETE FROM car;
