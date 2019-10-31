@@ -1,6 +1,8 @@
 package com.taximaps.server.config;
 
 
+import com.taximaps.server.service.impl.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +14,11 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseConfigurer;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
@@ -27,18 +34,16 @@ public class TestAppConfig extends WebMvcConfigurationSupport {
     @Bean
     DataSource dataSource( @Value("${spring.datasource.url}") String databaseUrl,
                              @Value("${spring.datasource.username}") String datasourceUsername,
-                             @Value("${spring.datasource.password}") String datasourcePassword,
-                             @Value("${spring.datasource.driverClassName}") String datasourceDriver){
+                             @Value("${spring.datasource.password}") String datasourcePassword){
 
-        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-        EmbeddedDatabase db = builder.setType(EmbeddedDatabaseType.H2).build();
+
 
          return DataSourceBuilder
                  .create()
                  .username(datasourceUsername)
                  .password(datasourcePassword)
                  .url(databaseUrl)
-                 .driverClassName(datasourceDriver)
                  .build();
     }
+
 }
