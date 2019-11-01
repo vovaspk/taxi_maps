@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -56,8 +57,9 @@ public class MainController {
     }
 
     @GetMapping("/user/profile")
-    public String profile(Model model, @RequestParam String name){
-        User user = (User) userService.loadUserByUsername(name);
+    public String profile(Model model, /*@RequestParam String name,*/ HttpServletRequest req){
+        String userName = req.getUserPrincipal().getName();
+        User user = (User) userService.loadUserByUsername(userName);
         model.addAttribute("name", user.getUserName());
         return PagesConstants.PROFILE_PAGE;
     }
@@ -76,6 +78,7 @@ public class MainController {
         model.addAttribute("destPlaceId", destPlaceId);
         //draw route on map in html
         //return the html page with map and route on it
+
         return PagesConstants.RESPONSE_PAGE;
 
     }

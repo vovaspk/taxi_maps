@@ -8,4 +8,5 @@ public interface RidesService {
     List<Ride> findAll();
     List<Ride> findRidesByUserId(Long id);
     Ride findRideById(Long id);
+    boolean save(Ride ride);
 }

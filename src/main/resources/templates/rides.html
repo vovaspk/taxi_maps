@@ -1,5 +1,5 @@
-<!Doctype html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <title>Your Rides</title>
@@ -7,7 +7,7 @@
 <body>
 here are your rides
 
-${userRides}
+<span th:text="${userRides}"></span>
 
 </body>
 </html>

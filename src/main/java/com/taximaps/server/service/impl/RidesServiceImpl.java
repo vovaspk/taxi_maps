@@ -25,4 +25,10 @@ public class RidesServiceImpl implements RidesService {
     public Ride findRideById(Long id) {
         return ridesRepository.findRideById(id);
     }
+
+    @Override
+    public boolean save(Ride ride) {
+        ridesRepository.save(ride);
+        return true;
+    }
 }
