@@ -18,24 +18,22 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static com.taximaps.server.Utils.getUserSession;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = MainController.class)
 @RunWith(SpringRunner.class)
@@ -44,7 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 public class MainControllerTest {
     //1111
-    private static final String user_password = "$2a$08$zR2XQakN5rDX4RCFoy8c/ec90VxKrGjHJ4cIoND5ceBhqEmtqIuKy";
+    private static final String user_password_hashed = "$2a$08$zR2XQakN5rDX4RCFoy8c/ec90VxKrGjHJ4cIoND5ceBhqEmtqIuKy";
+    private static final String user_password = "1111";
     private static final String user_name = "vova";
 
     @MockBean
@@ -105,7 +104,7 @@ public class MainControllerTest {
     public void LoggedUserShouldSeeMapPage() throws Exception {
         User user = new User();
         user.setUserName(user_name);
-        user.setPassword(user_password);
+        user.setPassword(user_password_hashed);
         user.setEmail("vova");
         user.setActive(true);
         Mockito.when(userService.loadUserByUsername(user_name)).thenReturn(user);
@@ -130,7 +129,21 @@ public class MainControllerTest {
     }
 
     @Test
-    public void testProfile() {
+    @WithMockUser(username = "vova", password = "1111")
+    public void testProfile() throws Exception {
+        User user = new User();
+        user.setUserName(user_name);
+        user.setPassword(user_password_hashed);
+        user.setEmail("vova");
+        user.setActive(true);
+        Mockito.when(userService.loadUserByUsername(user_name)).thenReturn(user);
+        User testUser = (User) userService.loadUserByUsername(user_name);
+
+        mockMvc.perform(get("http://localhost:8080/user/profile")
+                .session(getUserSession(mockMvc, user_name, user_password)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("profile"));
+
 
     }
 

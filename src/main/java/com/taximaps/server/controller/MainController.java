@@ -11,6 +11,10 @@ import com.taximaps.server.service.impl.RidesServiceImpl;
 import com.taximaps.server.service.impl.UserServiceImpl;
 import com.taximaps.server.utils.pages.PagesConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +62,14 @@ public class MainController {
 
     @GetMapping("/user/profile")
     public String profile(Model model, /*@RequestParam String name,*/ HttpServletRequest req){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+
+            String username = ((UserDetails)principal).getUsername();
+
+            //String username = principal.toString();
+
+        System.out.println("current user: " + username);
         String userName = req.getUserPrincipal().getName();
         User user = (User) userService.loadUserByUsername(userName);
         model.addAttribute("name", user.getUserName());

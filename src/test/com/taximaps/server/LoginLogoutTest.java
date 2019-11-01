@@ -93,15 +93,6 @@ public class LoginLogoutTest {
 
     @Test(timeout = 20000)
     public void loginTest() throws Exception {
-//        String userName = "UserVova";
-//        User user = new User();
-//        user.setId((long) 3);
-//        user.setUserName(userName);
-//        user.setEmail("testUser@gmail.com");
-//        user.setPassword("1234");
-//        user.setActive(true);
-//        user.setRoles(Collections.singleton(Role.USER));
-//        userService.addUser(user);
         User user = new User();
         user.setUserName(UserName);
         user.setPassword(PASSWORD);
