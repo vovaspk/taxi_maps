@@ -138,7 +138,7 @@ public class JsonReader {
         //return distance + ", " + duration;
     }
 
-    public static String getDriveDistanceAndTime(String startAddress, String endAddress) throws InterruptedException, ApiException, IOException {
+    public static double getDriveDistance(String startAddress, String endAddress) throws InterruptedException, ApiException, IOException {
         DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(getGeoContext());
         DistanceMatrix result = req.origins(startAddress)
                 .destinations(endAddress)
@@ -148,11 +148,28 @@ public class JsonReader {
                 .await();
 
         long distApart = result.rows[0].elements[0].distance.inMeters;
-        String duration = result.rows[0].elements[0].duration.toString();
+        //String duration = result.rows[0].elements[0].duration.toString();
        //NULL-> BigDecimal fare = result.rows[0].elements[0].fare.value;
 
 
-        return distApart + ", " + duration;
+        return distApart ;
+    }
+
+    public static String getDriveTime(String startAddress, String endAddress) throws InterruptedException, ApiException, IOException {
+        DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(getGeoContext());
+        DistanceMatrix result = req.origins(startAddress)
+                .destinations(endAddress)
+                .mode(TravelMode.DRIVING)
+                .avoid(DirectionsApi.RouteRestriction.TOLLS)
+                .language("en-US")
+                .await();
+
+        //long distApart = result.rows[0].elements[0].distance.inMeters;
+        String duration = result.rows[0].elements[0].duration.toString();
+        //NULL-> BigDecimal fare = result.rows[0].elements[0].fare.value;
+
+
+        return duration;
     }
 
     public static String getDirectionResult(String startAddress, String endAddress) throws InterruptedException, ApiException, IOException {

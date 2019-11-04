@@ -99,6 +99,12 @@
     <form action="/processInput" method="post">
         <input id="pac-input" type="text" name="origin" placeholder="From">
         <input id="pac-dest" type="text" name="destination" placeholder="Where to go">
+        <select name="rideType" id="rideType">
+            <option id="ordinary">Ordinary</option>
+            <option id="luxury">Luxury</option>
+            <option id="pet">with pet</option>
+            <option id="group">group (8 sits)</option>
+        </select>
         <input id="date" type="date" placeholder="Select Date">
         <button type="submit">Book</button>
     </form>

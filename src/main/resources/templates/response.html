@@ -110,10 +110,24 @@ to
 <div id="response">
 <!--<p th:text="{response}"></p>-->
 </div>
+<!--<div id="carLocations">-->
+<!--    <tr th:each="car: ${carLocations}">-->
+<!--        <td th:text="${car}" />-->
+
+<!--    </tr>-->
+<!--</div>-->
+<div id="cars">
+    <tr th:each="car: ${cars}">
+        <td th:text="${car.getLocation()}" />
+
+    </tr>
+</div>
     DISTANTION(meters), duration: <p th:text="${dist}"> </p>
 <div id="start" >start: <p th:text="${start}"></p> </div>
 <div id="end">end: <p th:text="${end}"></p> </div>
 <div id="direct"><p th:text="${direct}"></p></div>
+Time of Ride: <p th:text="${timeOfRide}"></p>
+Price : <p th:text="${price}"></p>
 MAP NEXT <button id="showDirection" type="submit">Confirm ride</button>
 <div id="map"></div>
 <script>
@@ -124,6 +138,10 @@ MAP NEXT <button id="showDirection" type="submit">Confirm ride</button>
     var destination = document.getElementById("destination").innerText;
     var originPlaceId = document.getElementById("originPlaceId").innerText;
     var destPlaceId = document.getElementById("destPlaceId").innerText;
+    var carLocations = document.getElementById("carLocations").innerText;
+    var cars = document.getElementById("cars").innerText;
+    var readyCars = String.prototype.split(cars, " ");
+    var c = [[${cars}]];
     initMap();
     function initMap() {
         var directionsService = new google.maps.DirectionsService();
@@ -141,7 +159,25 @@ MAP NEXT <button id="showDirection" type="submit">Confirm ride</button>
             console.log('goes to here 1');
             calculateAndDisplayRoute(directionsService, directionsRenderer);
         };
+
         document.getElementById('showDirection').addEventListener('click', onChangeHandler);
+        for(var i=0;i<readyCars.length;i++){
+            addMarker(readyCars[i]);
+        }
+
+
+    }
+
+    function addMarker(coords){
+
+        var marker = new google.maps.Marker({
+            icon: {
+                url: "http://maps.google.com/mapfiles/kml/pal4/icon15.png"
+            },
+            animation: google.maps.Animation.DROP,
+            position:coords,
+            map:map
+        });
     }
 
     function calculateAndDisplayRoute(directionsService, directionsRenderer) {

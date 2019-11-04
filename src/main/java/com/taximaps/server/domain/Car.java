@@ -1,6 +1,5 @@
 package com.taximaps.server.domain;
 
-import com.google.maps.model.LatLng;
 import com.taximaps.server.domain.status.CarStatus;
 
 import javax.persistence.*;
@@ -11,9 +10,15 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private LatLng location;
+    private String location;
     @Enumerated(EnumType.STRING)
     private CarStatus carStatus;
+
+    public Car(String name, String location, CarStatus carStatus) {
+        this.name = name;
+        this.location = location;
+        this.carStatus = carStatus;
+    }
 
     public Car() {
     }
@@ -34,11 +39,11 @@ public class Car {
         this.name = name;
     }
 
-    public LatLng getLocation() {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation(LatLng location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
@@ -48,5 +53,15 @@ public class Car {
 
     public void setCarStatus(CarStatus carStatus) {
         this.carStatus = carStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", location='" + location + '\'' +
+                ", carStatus=" + carStatus +
+                '}';
     }
 }

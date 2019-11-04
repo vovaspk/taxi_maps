@@ -21,11 +21,23 @@ public class Ride {
     private User user;
     @Enumerated(value = EnumType.STRING)
     private RideStatus status;
+    @Enumerated(EnumType.STRING)
+    private RideType rideType = RideType.ORDINARY;
     private double price;
-// and run add markers(drivers) randomly in city and find nearest and find his arrivalTime
-// and think about flow between main ,find driver,  then save ride, and where to go
-// if rideStatus will exists then think about checking the status of your driver or car when you book a ride
-// and class car with status
+
+    public Ride(Time rideTime, Date rideDate, LatLng startPoint, LatLng destination, User user, RideStatus status, RideType rideType, double price) {
+        this.rideTime = rideTime;
+        this.rideDate = rideDate;
+        this.startPoint = startPoint;
+        this.destination = destination;
+        this.user = user;
+        this.status = status;
+        this.rideType = rideType;
+        this.price = price;
+    }
+
+
+
     public User getUser() {
         return user;
     }

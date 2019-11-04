@@ -10,4 +10,5 @@ public interface CarService {
     List<Car> findAll();
     List<Car> findCarsByCarStatus(CarStatus carStatus);
     List<Car> findCarsByLocation(LatLng location);
+    void save(Car car);
 }

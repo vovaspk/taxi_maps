@@ -35,4 +35,9 @@ public class CarServiceImpl implements CarService {
     public List<Car> findCarsByLocation(LatLng location) {
         return carRepository.findCarsByLocation(location);
     }
+
+    @Override
+    public void save(Car car) {
+        carRepository.save(car);
+    }
 }
