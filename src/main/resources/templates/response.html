@@ -92,7 +92,7 @@
 <body>
 <div id="nv" th:replace="parts/navbar.html"></div>
 <div id="originPlaceId">
-<p th:text="${originPlaceId}"></p>
+<p th:text="${originPlaceId}" ></p>
 </div>
 <div id="destPlaceId">
 <p th:text="${destPlaceId}"></p>
@@ -110,15 +110,15 @@ to
 <div id="response">
 <!--<p th:text="{response}"></p>-->
 </div>
-<!--<div id="carLocations">-->
-<!--    <tr th:each="car: ${carLocations}">-->
-<!--        <td th:text="${car}" />-->
-
-<!--    </tr>-->
-<!--</div>-->
 <div id="cars">
     <tr th:each="car: ${cars}">
         <td th:text="${car.getLocation()}" />
+
+    </tr>
+</div>
+<div id="carLocations">
+    <tr th:each="car: ${carLocations}">
+        <td th:text="${car}" />
 
     </tr>
 </div>
@@ -140,14 +140,13 @@ MAP NEXT <button id="showDirection" type="submit">Confirm ride</button>
     var destPlaceId = document.getElementById("destPlaceId").innerText;
     var carLocations = document.getElementById("carLocations").innerText;
     var cars = document.getElementById("cars").innerText;
-    var readyCars = String.prototype.split(cars, " ");
-    var c = [[${cars}]];
+    var readyCars = cars.split(" ");
+
+
     initMap();
     function initMap() {
         var directionsService = new google.maps.DirectionsService();
         var directionsRenderer = new google.maps.DirectionsRenderer();
-
-
 
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 12,
@@ -175,7 +174,7 @@ MAP NEXT <button id="showDirection" type="submit">Confirm ride</button>
                 url: "http://maps.google.com/mapfiles/kml/pal4/icon15.png"
             },
             animation: google.maps.Animation.DROP,
-            position:coords,
+            position: new google.maps.LatLng(coords.split(",")[0], coords.split(",")[1]),
             map:map
         });
     }

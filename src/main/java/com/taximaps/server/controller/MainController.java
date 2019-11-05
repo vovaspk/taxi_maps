@@ -97,6 +97,7 @@ public class MainController {
         String timeOfRide = ridesService.calculateTime(origin, destination, rideType1);
         model.addAttribute("timeOfRide", timeOfRide);
         model.addAttribute("price", price);
+        model.addAttribute("testPrice", price);
 
         System.out.println("Time: " + timeOfRide);
         System.out.println("price: " + price);
