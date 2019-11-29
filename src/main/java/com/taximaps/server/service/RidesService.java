@@ -1,9 +1,9 @@
 package com.taximaps.server.service;
 
 import com.google.maps.errors.ApiException;
-import com.taximaps.server.domain.Ride;
-import com.taximaps.server.domain.RideType;
-import com.taximaps.server.domain.status.RideStatus;
+import com.taximaps.server.entity.Ride;
+import com.taximaps.server.entity.RideType;
+import com.taximaps.server.entity.status.RideStatus;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,10 +1,12 @@
 package com.taximaps.server.service.impl;
 
 import com.taximaps.server.repository.UserRepository;
-import com.taximaps.server.domain.Role;
-import com.taximaps.server.domain.User;
+import com.taximaps.server.entity.Role;
+import com.taximaps.server.entity.User;
 import com.taximaps.server.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,16 +16,11 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserDetailsService, UserService {
 
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public boolean addUser(User user){
         User userFromDB = userRepository.findByUserName(user.getUserName());
@@ -48,6 +45,23 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
 
         return user;
+    }
+
+    @Override
+    public void save(User user) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+        User userFromDb = userRepository.findByUserName(username);
+
+        if(userFromDb != null){
+            userFromDb.setUserName(user.getUserName());
+            userFromDb.setEmail(user.getEmail());
+            //crypt password
+            userFromDb.setPassword(passwordEncoder.encode(user.getPassword()));
+            System.out.println("updating user: " + user.getEmail());
+            userRepository.save(userFromDb);
+        }
+
     }
 
 

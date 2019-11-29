@@ -1,9 +1,9 @@
 package com.taximaps.server;
 
 import com.taximaps.server.config.TestAppConfig;
-import com.taximaps.server.controller.MainController;
-import com.taximaps.server.domain.Role;
-import com.taximaps.server.domain.User;
+import com.taximaps.server.controller.web.MainController;
+import com.taximaps.server.entity.Role;
+import com.taximaps.server.entity.User;
 import com.taximaps.server.repository.CarRepository;
 import com.taximaps.server.repository.RidesRepository;
 import com.taximaps.server.repository.UserRepository;

@@ -1,4 +1,4 @@
-package com.taximaps.server.domain;
+package com.taximaps.server.entity;
 
 public enum  RideType {
     ORDINARY,

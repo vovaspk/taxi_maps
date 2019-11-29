@@ -1,6 +1,6 @@
 package com.taximaps.server.repository;
 
-import com.taximaps.server.domain.Ride;
+import com.taximaps.server.entity.Ride;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -87,6 +87,15 @@
             font-weight: 500;
             padding: 6px 12px;
         }
+        #cars{
+            display: none;
+        }
+        #carLocations{
+            display: none;
+        }
+        #foundCarCoords{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -97,7 +106,6 @@
 <div id="destPlaceId">
 <p th:text="${destPlaceId}"></p>
 </div>
-Response should be here:
 To get from
 <div id="origin">
 <p th:text="${origin}"></p>
@@ -106,10 +114,10 @@ to
 <div id="destination">
 <p th:text="${destination}"></p>
 </div>
-    you need:
-<div id="response">
-<!--<p th:text="{response}"></p>-->
-</div>
+it takes:
+<!--<div id="response">-->
+<!--&lt;!&ndash;<p th:text="{response}"></p>&ndash;&gt;-->
+<!--</div>-->
 <div id="cars">
     <tr th:each="car: ${cars}">
         <td th:text="${car.getLocation()}" />
@@ -122,24 +130,28 @@ to
 
     </tr>
 </div>
-    DISTANTION(meters), duration: <p th:text="${dist}"> </p>
-<div id="start" >start: <p th:text="${start}"></p> </div>
-<div id="end">end: <p th:text="${end}"></p> </div>
-<div id="direct"><p th:text="${direct}"></p></div>
+<div id="foundCarCoords">
+    <p th:text="${foundCarCoords}"/>
+</div>
+<!--    DISTANTION(meters), duration: <p th:text="${dist}"> </p>-->
+<!--<div id="start" >start: <p th:text="${start}"></p> </div>-->
+<!--<div id="end">end: <p th:text="${end}"></p> </div>-->
+<!--<div id="direct"><p th:text="${direct}"></p></div>-->
 Time of Ride: <p th:text="${timeOfRide}"></p>
 Price : <p th:text="${price}"></p>
-MAP NEXT <button id="showDirection" type="submit">Confirm ride</button>
+<button id="showDirection" type="submit">Confirm ride</button>
 <div id="map"></div>
 <script>
     var map;
-    var start = document.getElementById("start");
-    var end = document.getElementById("end");
-    var origin = document.getElementById("origin").innerText;
-    var destination = document.getElementById("destination").innerText;
+    // var start = document.getElementById("start");
+    // var end = document.getElementById("end");
+    // var origin = document.getElementById("origin").innerText;
+    // var destination = document.getElementById("destination").innerText;
     var originPlaceId = document.getElementById("originPlaceId").innerText;
     var destPlaceId = document.getElementById("destPlaceId").innerText;
     var carLocations = document.getElementById("carLocations").innerText;
     var cars = document.getElementById("cars").innerText;
+    console.log(document.getElementById("cars"));
     var readyCars = cars.split(" ");
 
 
@@ -197,6 +209,8 @@ MAP NEXT <button id="showDirection" type="submit">Confirm ride</button>
                     window.alert('Directions request failed due to ' + status);
                 }
             });
+
+        addMarker(document.getElementById("foundCarCoords").innerText);
     }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBR4RT24iLNmr74yE168KRWz5qdjr3NhVc&callback=initMap"

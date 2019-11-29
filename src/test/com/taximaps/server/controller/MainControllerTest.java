@@ -1,7 +1,8 @@
 package com.taximaps.server.controller;
 
 import com.taximaps.server.config.TestAppConfig;
-import com.taximaps.server.domain.User;
+import com.taximaps.server.controller.web.MainController;
+import com.taximaps.server.entity.User;
 import com.taximaps.server.repository.CarRepository;
 import com.taximaps.server.repository.RidesRepository;
 import com.taximaps.server.repository.UserRepository;
@@ -24,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static com.taximaps.server.Utils.getUserSession;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
@@ -139,10 +139,18 @@ public class MainControllerTest {
         Mockito.when(userService.loadUserByUsername(user_name)).thenReturn(user);
         User testUser = (User) userService.loadUserByUsername(user_name);
 
-        mockMvc.perform(get("http://localhost:8080/user/profile")
-                .session(getUserSession(mockMvc, user_name, user_password)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("profile"));
+        mockMvc.perform(formLogin().user(user_name).password("1111"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"))
+                .andExpect(authenticated().withUsername(user_name));
+
+
+//        mockMvc.perform(get("/")
+//                .session(getUserSession(mockMvc, user_name, user_password)))
+//                .andExpect(redirectedUrl("main"))
+//                .andExpect(status().isOk());
+//               // .andExpect(view().name("/user/profile"));
 
 
     }

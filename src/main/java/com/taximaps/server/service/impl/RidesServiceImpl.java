@@ -1,12 +1,17 @@
 package com.taximaps.server.service.impl;
 
 import com.google.maps.errors.ApiException;
-import com.taximaps.server.domain.RideType;
-import com.taximaps.server.domain.status.RideStatus;
+import com.taximaps.server.entity.RideType;
+import com.taximaps.server.entity.status.CarStatus;
+import com.taximaps.server.entity.status.RideStatus;
 import com.taximaps.server.maps.JsonReader;
+import com.taximaps.server.repository.CarRepository;
 import com.taximaps.server.repository.RidesRepository;
-import com.taximaps.server.domain.Ride;
+import com.taximaps.server.entity.Ride;
+import com.taximaps.server.service.CarService;
 import com.taximaps.server.service.RidesService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +19,12 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
+@Slf4j
 public class RidesServiceImpl implements RidesService {
 
-    @Autowired
     private RidesRepository ridesRepository;
+    private CarService carService;
     private final double timeFor1KM = 2.5;
     private final double priceFor1KM = 11;
 
@@ -37,6 +44,18 @@ public class RidesServiceImpl implements RidesService {
     @Override
     public boolean save(Ride ride) {
         ridesRepository.save(ride);
+        //think about it
+//        new java.util.Timer().schedule(
+//                new java.util.TimerTask() {
+//                    @Override
+//                    public void run() {
+//
+//                      carService.setCarFree(ride.getCar());
+//                    }
+//                },
+//                5000
+//        );
+        //TODO check if carservice setCar free changes car to free in ride table with foreign key
         return true;
     }
 

@@ -1,7 +1,7 @@
-package com.taximaps.server.domain;
+package com.taximaps.server.entity;
 
 import com.google.maps.model.LatLng;
-import com.taximaps.server.domain.status.RideStatus;
+import com.taximaps.server.entity.status.RideStatus;
 
 import java.sql.Time;
 import java.util.Date;
@@ -11,6 +11,7 @@ public class RideBuilder {
     private Date rideDate;
     private LatLng startPoint;
     private LatLng destination;
+    private Car car;
     private User user;
     private RideStatus status;
     private RideType rideType;
@@ -36,6 +37,11 @@ public class RideBuilder {
         return this;
     }
 
+    public RideBuilder setCar(Car car){
+        this.car = car;
+        return this;
+    }
+
     public RideBuilder setUser(User user) {
         this.user = user;
         return this;
@@ -57,6 +63,6 @@ public class RideBuilder {
     }
 
     public Ride createRide() {
-        return new Ride(rideTime, rideDate, startPoint, destination, user, status, rideType, price);
+        return new Ride(rideTime, rideDate, startPoint, destination, car, user, status, rideType, price);
     }
 }

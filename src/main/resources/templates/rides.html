@@ -7,7 +7,13 @@
 <body>
 here are your rides
 
-<span th:text="${userRides}"></span>
 
+<tr th:each="ride: ${userRides}">
+    <td th:text="${ride.getStartPoint()}" />
+    <td th:text="${ride.getDestination()}" />
+    <td th:text="${ride.getRideDate()}" />
+    <td th:text="${ride.getPrice()}" />
+
+</tr>
 </body>
 </html>

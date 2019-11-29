@@ -1,30 +1,20 @@
 package com.taximaps.server.repository;
 
-import com.taximaps.server.controller.MainController;
-import com.taximaps.server.domain.Role;
-import com.taximaps.server.domain.User;
-import com.taximaps.server.service.UserService;
+import com.taximaps.server.entity.Role;
+import com.taximaps.server.entity.User;
 import com.taximaps.server.service.impl.UserServiceImpl;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Collections;
 
 import static org.junit.Assert.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest

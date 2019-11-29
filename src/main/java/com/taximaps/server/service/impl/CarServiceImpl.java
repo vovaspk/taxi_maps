@@ -1,25 +1,29 @@
 package com.taximaps.server.service.impl;
 
-import com.google.maps.model.LatLng;
+import com.google.maps.errors.ApiException;
+import com.taximaps.server.entity.Car;
+import com.taximaps.server.entity.Location;
+import com.taximaps.server.entity.status.CarStatus;
+import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.repository.CarRepository;
-import com.taximaps.server.domain.Car;
-import com.taximaps.server.domain.status.CarStatus;
 import com.taximaps.server.service.CarService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
+@AllArgsConstructor
+@Slf4j
 public class CarServiceImpl implements CarService {
 
     private CarRepository carRepository;
-
-    @Autowired
-    public CarServiceImpl(CarRepository carRepository) {
-        this.carRepository = carRepository;
-    }
-
+    private LocationMapper locationMapper;
 
     @Override
     public List<Car> findAll() {
@@ -32,12 +36,55 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> findCarsByLocation(LatLng location) {
-        return carRepository.findCarsByLocation(location);
+    public Car findNearestCarToLocation(String location) throws InterruptedException, ApiException, IOException {
+        Location givenLocation = locationMapper.toLocation(location);
+        List<Car> availableCars = carRepository.findCarsByCarStatus(CarStatus.FREE);
+        //double distance = Double.MAX_VALUE;
+        Map<Car, Double> carDoubleMap = new HashMap<>();
+        for (Car tempCar : availableCars) {
+            carDoubleMap.put(tempCar, distance(tempCar.getLocation().getLat(), tempCar.getLocation().getLng(), givenLocation.getLat(), givenLocation.getLng()));
+        }
+
+        Car foundCar = Collections.min(carDoubleMap.entrySet(), Map.Entry.comparingByValue()).getKey();
+
+//        return availableCars
+//                .stream()
+//                .sorted()
+//                .min((car1, car2) -> distance(givenLocation.getLat(), givenLocation.getLng(),car1.getLocation().getLat(), car1.getLocation().getLng()))
+//                .get();
+        return foundCar;
+    }
+
+
+    @Override
+    public void setCarFree(Car car) {
+        car.setCarStatus(CarStatus.FREE);
+        carRepository.save(car);
     }
 
     @Override
     public void save(Car car) {
         carRepository.save(car);
+    }
+
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        // haversine great circle distance approximation, returns meters
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
+                + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2))
+                * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60; // 60 nautical miles per degree of seperation
+        dist = dist * 1852; // 1852 meters per nautical mile
+        return (dist);
+    }
+
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
     }
 }

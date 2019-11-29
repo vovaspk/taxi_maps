@@ -1,4 +1,4 @@
-package com.taximaps.server.domain.status;
+package com.taximaps.server.entity.status;
 
 public enum RideStatus {
     NEW_RIDE,

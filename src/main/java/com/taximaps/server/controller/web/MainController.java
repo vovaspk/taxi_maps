@@ -1,10 +1,8 @@
-package com.taximaps.server.controller;
+package com.taximaps.server.controller.web;
 
 import com.google.maps.errors.ApiException;
-import com.google.maps.model.LatLng;
-import com.taximaps.server.domain.*;
-import com.taximaps.server.domain.status.CarStatus;
-import com.taximaps.server.domain.status.RideStatus;
+import com.taximaps.server.entity.*;
+import com.taximaps.server.entity.dto.UserProfileFormDto;
 import com.taximaps.server.service.CarService;
 import com.taximaps.server.utils.CarCoordinatsUtils;
 import com.taximaps.server.service.RidesService;
@@ -12,6 +10,7 @@ import com.taximaps.server.service.UserService;
 import com.taximaps.server.service.impl.RidesServiceImpl;
 import com.taximaps.server.service.impl.UserServiceImpl;
 import com.taximaps.server.utils.pages.PagesConstants;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,26 +20,19 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.sql.Time;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
 import static com.taximaps.server.maps.JsonReader.*;
 
 @Controller
+@AllArgsConstructor
 public class MainController {
 
     private UserService userService;
     private RidesService ridesService;
     private CarService carService;
 
-    @Autowired
-    public MainController(UserServiceImpl userService, RidesServiceImpl ridesService, CarService carService) {
-        this.userService = userService;
-        this.ridesService = ridesService;
-        this.carService = carService;
-    }
 
     @GetMapping(value = {"/", "/map", "/main"}, produces = "text/html")
     public String map(Model model) {
@@ -64,20 +56,22 @@ public class MainController {
     }
 
     @GetMapping("/user/profile")
-    public String profile(Model model, /*@RequestParam String name,*/ HttpServletRequest req) {
+    public String profile(Model model, HttpServletRequest req) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+        UserProfileFormDto formDto = new UserProfileFormDto();
         String username = ((UserDetails) principal).getUsername();
 
         System.out.println("current user: " + username);
         User user = getUser(req);
+        model.addAttribute("formDto", formDto);
         model.addAttribute("name", user.getUserName());
+        model.addAttribute("email", user.getEmail());
+        model.addAttribute("password", user.getPassword());
         return PagesConstants.PROFILE_PAGE;
     }
 
     @PostMapping(value = "/processInput", produces = "text/html")
     public String getOriginAndDestFromUser(@RequestParam String origin, @RequestParam String destination, @RequestParam String rideType, Date date, Model model, HttpServletRequest req) throws IOException, ApiException, InterruptedException {
-        // String response = JsonReader.sendRequest(origin, destination);
         model.addAttribute("origin", origin);
         model.addAttribute("destination", destination);
         model.addAttribute("cars", carService.findAll());
@@ -89,8 +83,7 @@ public class MainController {
         model.addAttribute("destPlaceId", destPlaceId);
 
         RideType rideType1 = RideType.valueOf(rideType.toUpperCase());
-        //LatLng originCoords = new LatLng(Double.parseDouble(originPlaceId), Double.parseDouble(originPlaceId));
-        //LatLng destCoords = new LatLng(Double.parseDouble(destPlaceId), Double.parseDouble(destPlaceId));
+
 
         User user = getUser(req);
         double price = ridesService.calculatePrice(origin,destination, rideType1);
@@ -107,6 +100,11 @@ public class MainController {
 //                        .setRideDate(date)
 //                        .setStartPoint(originCoords)
 //                        .setDestination(destCoords)
+        //make method find nearest car (from available cars) and assign car to ride and make it non available
+        Car foundCar = carService.findNearestCarToLocation(destination);
+        model.addAttribute("foundCarCoords", foundCar.getLocation().toString());
+        System.out.println(foundCar.toString());
+//                        .setCar(foundCar);
 //                        .setUser(user)
 //                        .setStatus(RideStatus.NEW_RIDE)
 //                        .setRideType(rideType)

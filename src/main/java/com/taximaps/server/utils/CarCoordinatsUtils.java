@@ -17,10 +17,6 @@ public class CarCoordinatsUtils {
             "49.227373,28.3980087",
             "49.2289307,28.4230224"));
 
-    public static List<String> getCoords() {
-        return coords;
-    }
-
     private static LatLng[] latLngsCoords = {
             new LatLng(49.2259516, 28.4052628),
             new LatLng(49.2251249, 28.4079674),
@@ -30,6 +26,10 @@ public class CarCoordinatsUtils {
             new LatLng(49.227373, 28.3980087),
             new LatLng(49.2289307, 28.4230224)
     };
+
+    public static List<String> getCoords() {
+        return coords;
+    }
 
     public static LatLng[] getLatLngsCoords() {
         return latLngsCoords;
