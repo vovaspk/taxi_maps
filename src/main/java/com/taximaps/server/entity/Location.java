@@ -26,4 +26,8 @@ public class Location extends AbstractEntity{
         this.lng = lng;
     }
 
+    @Override
+    public String toString() {
+        return lat + "," + lng;
+    }
 }

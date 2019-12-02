@@ -143,6 +143,7 @@ Price : <p th:text="${price}"></p>
 <div id="map"></div>
 <script>
     var map;
+    var infoWindow;
     // var start = document.getElementById("start");
     // var end = document.getElementById("end");
     // var origin = document.getElementById("origin").innerText;
@@ -179,6 +180,7 @@ Price : <p th:text="${price}"></p>
 
     }
 
+
     function addMarker(coords){
 
         var marker = new google.maps.Marker({
@@ -188,6 +190,15 @@ Price : <p th:text="${price}"></p>
             animation: google.maps.Animation.DROP,
             position: new google.maps.LatLng(coords.split(",")[0], coords.split(",")[1]),
             map:map
+        });
+
+        infoWindow = new google.maps.InfoWindow({
+            content: "taxi car",
+            options: {maxWidth: 200}
+        });
+
+        marker.addListener('click', function() {
+                infoWindow.open(map, marker);
         });
     }
 

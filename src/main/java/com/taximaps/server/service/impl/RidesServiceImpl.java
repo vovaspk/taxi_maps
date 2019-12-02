@@ -25,8 +25,8 @@ public class RidesServiceImpl implements RidesService {
 
     private RidesRepository ridesRepository;
     private CarService carService;
-    private final double timeFor1KM = 2.5;
-    private final double priceFor1KM = 11;
+    private static final double timeFor1KM = 2.5;
+    private static final double priceFor1KM = 11;
 
     public List<Ride> findAll() {
         return ridesRepository.findAll();
@@ -44,7 +44,6 @@ public class RidesServiceImpl implements RidesService {
     @Override
     public boolean save(Ride ride) {
         ridesRepository.save(ride);
-        //think about it
 //        new java.util.Timer().schedule(
 //                new java.util.TimerTask() {
 //                    @Override
@@ -55,7 +54,7 @@ public class RidesServiceImpl implements RidesService {
 //                },
 //                5000
 //        );
-        //TODO check if carservice setCar free changes car to free in ride table with foreign key
+        //TODO check if carService setCar free changes car to free in ride table with foreign key
         return true;
     }
 
