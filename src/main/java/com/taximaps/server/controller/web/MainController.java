@@ -3,15 +3,14 @@ package com.taximaps.server.controller.web;
 import com.google.maps.errors.ApiException;
 import com.taximaps.server.entity.*;
 import com.taximaps.server.entity.dto.UserProfileFormDto;
+import com.taximaps.server.entity.status.RideStatus;
+import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.service.CarService;
 import com.taximaps.server.utils.CarCoordinatsUtils;
 import com.taximaps.server.service.RidesService;
 import com.taximaps.server.service.UserService;
-import com.taximaps.server.service.impl.RidesServiceImpl;
-import com.taximaps.server.service.impl.UserServiceImpl;
 import com.taximaps.server.utils.pages.PagesConstants;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -20,8 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Date;
-import java.util.List;
 
 import static com.taximaps.server.maps.JsonReader.*;
 
@@ -32,27 +32,12 @@ public class MainController {
     private UserService userService;
     private RidesService ridesService;
     private CarService carService;
+    private LocationMapper locationMapper;
 
 
     @GetMapping(value = {"/", "/map", "/main"}, produces = "text/html")
     public String map(Model model) {
         return PagesConstants.MAIN_PAGE;
-    }
-
-    @GetMapping("/rides")
-    public String getRidesList(User user, Model model) {
-        List<Ride> userRides = ridesService.findRidesByUserId(user.getId());
-        model.addAttribute("userRides", userRides);
-        return PagesConstants.RIDES_PAGE;
-    }
-
-    //this will be page of specific ride
-    @GetMapping("/rides/{id}")
-    public String getRide(Model model, @PathVariable Long id) {
-        Ride ride = ridesService.findRideById(id);
-        model.addAttribute("ride", ride);
-        return PagesConstants.SPECIFIC_RIDE_PAGE;
-
     }
 
     @GetMapping("/user/profile")
@@ -71,7 +56,7 @@ public class MainController {
     }
 
     @PostMapping(value = "/processInput", produces = "text/html")
-    public String getOriginAndDestFromUser(@RequestParam String origin, @RequestParam String destination, @RequestParam String rideType, Date date, Model model, HttpServletRequest req) throws IOException, ApiException, InterruptedException {
+    public String getOriginAndDestFromUser(@RequestParam String origin, @RequestParam String destination, @RequestParam String carType, Date date, Model model, HttpServletRequest req) throws IOException, ApiException, InterruptedException {
         model.addAttribute("origin", origin);
         model.addAttribute("destination", destination);
         model.addAttribute("cars", carService.findAll());
@@ -82,34 +67,36 @@ public class MainController {
         model.addAttribute("originPlaceId", originPlaceId);
         model.addAttribute("destPlaceId", destPlaceId);
 
-        RideType rideType1 = RideType.valueOf(rideType.toUpperCase());
+        CarType carType1 = CarType.valueOf(carType.toUpperCase());
 
 
         User user = getUser(req);
-        double price = ridesService.calculatePrice(origin,destination, rideType1);
-        String timeOfRide = ridesService.calculateTime(origin, destination, rideType1);
+        double price = ridesService.calculatePrice(origin,destination, carType1);
+        String timeOfRide = ridesService.calculateTime(origin, destination, carType1);
         model.addAttribute("timeOfRide", timeOfRide);
         model.addAttribute("price", price);
         model.addAttribute("testPrice", price);
 
         System.out.println("Time: " + timeOfRide);
         System.out.println("price: " + price);
-//        ridesService.save(
-//                new RideBuilder()
-//                        .setRideTime(Time.valueOf(LocalTime.now()))
-//                        .setRideDate(date)
-//                        .setStartPoint(originCoords)
-//                        .setDestination(destCoords)
+
         //make method find nearest car (from available cars) and assign car to ride and make it non available
-        Car foundCar = carService.findNearestCarToLocation(destination);
+        //TODO or find nearest car by type user picked,
+        Car foundCar = carService.findNearestCarToLocationAndType(destination, carType1);
         model.addAttribute("foundCarCoords", foundCar.getLocation().toString());
         System.out.println(foundCar.toString());
-//                        .setCar(foundCar);
-//                        .setUser(user)
-//                        .setStatus(RideStatus.NEW_RIDE)
-//                        .setRideType(rideType)
-//                        .setPrice(price)
-//                        .createRide());
+
+        ridesService.save(Ride.builder()
+                .startPoint(locationMapper.fromAddressToLocation(origin))
+        .destination(locationMapper.fromAddressToLocation(destination))
+        .price(price)
+        .user(user)
+        .car(foundCar)
+        .rideDate(date)
+                //provide user ability to choose date and time
+        .rideTime(Time.valueOf(LocalTime.now()))
+        .status(RideStatus.NEW_RIDE)
+        .build());
 
         return PagesConstants.RESPONSE_PAGE;
 

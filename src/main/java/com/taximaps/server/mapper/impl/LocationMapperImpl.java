@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+import static com.taximaps.server.maps.JsonReader.getGeocodeCoordinats;
+
 @Component
 @AllArgsConstructor
 public class LocationMapperImpl implements LocationMapper {
@@ -24,13 +26,22 @@ public class LocationMapperImpl implements LocationMapper {
     }
 
     @Override
-    public Location toLocation(String location) throws InterruptedException, ApiException, IOException {
-        String convertedLocation = JsonReader.getGeocodeCoordinats(location);
+    public Location fromCoordsToLocation(String location) throws InterruptedException, ApiException, IOException {
+        String convertedLocation = getGeocodeCoordinats(location);
         Location location1 = new Location();
         String lat = convertedLocation.split(",")[0];
         String lng = convertedLocation.split(",")[1];
         location1.setLng(Double.valueOf(lng));
         location1.setLat(Double.valueOf(lat));
+        return location1;
+    }
+
+    @Override
+    public Location fromAddressToLocation(String location) throws InterruptedException, ApiException, IOException {
+        Location location1 = new Location();
+        String geocodeCoordinats = getGeocodeCoordinats(location);
+        //location1.setLat(getGeocodeCoordinats(location))
+        //location1.setLng(getGeocodeCoordinats(location))
         return location1;
     }
 }

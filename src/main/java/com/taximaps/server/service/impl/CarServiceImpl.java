@@ -2,6 +2,7 @@ package com.taximaps.server.service.impl;
 
 import com.google.maps.errors.ApiException;
 import com.taximaps.server.entity.Car;
+import com.taximaps.server.entity.CarType;
 import com.taximaps.server.entity.Location;
 import com.taximaps.server.entity.status.CarStatus;
 import com.taximaps.server.mapper.LocationMapper;
@@ -36,9 +37,9 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Car findNearestCarToLocation(String location) throws InterruptedException, ApiException, IOException {
-        Location givenLocation = locationMapper.toLocation(location);
-        List<Car> availableCars = carRepository.findCarsByCarStatus(CarStatus.FREE);
+    public Car findNearestCarToLocationAndType(String location, CarType carType) throws InterruptedException, ApiException, IOException {
+        Location givenLocation = locationMapper.fromCoordsToLocation(location);
+        List<Car> availableCars = carRepository.findCarsByCarStatusAnAndCarType(CarStatus.FREE, carType);
         //double distance = Double.MAX_VALUE;
         Map<Car, Double> carDoubleMap = new HashMap<>();
         for (Car tempCar : availableCars) {

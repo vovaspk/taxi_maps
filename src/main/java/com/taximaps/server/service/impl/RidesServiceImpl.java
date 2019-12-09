@@ -1,21 +1,24 @@
 package com.taximaps.server.service.impl;
 
 import com.google.maps.errors.ApiException;
-import com.taximaps.server.entity.RideType;
-import com.taximaps.server.entity.status.CarStatus;
+import com.taximaps.server.entity.Car;
+import com.taximaps.server.entity.CarType;
+import com.taximaps.server.entity.User;
+import com.taximaps.server.entity.dto.RideFormDto;
 import com.taximaps.server.entity.status.RideStatus;
+import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.maps.JsonReader;
-import com.taximaps.server.repository.CarRepository;
 import com.taximaps.server.repository.RidesRepository;
 import com.taximaps.server.entity.Ride;
 import com.taximaps.server.service.CarService;
 import com.taximaps.server.service.RidesService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -25,6 +28,7 @@ public class RidesServiceImpl implements RidesService {
 
     private RidesRepository ridesRepository;
     private CarService carService;
+    private LocationMapper locationMapper;
     private static final double timeFor1KM = 2.5;
     private static final double priceFor1KM = 11;
 
@@ -53,9 +57,27 @@ public class RidesServiceImpl implements RidesService {
 //                    }
 //                },
 //                5000
+//        ride.getRideTime().getTime();
 //        );
         //TODO check if carService setCar free changes car to free in ride table with foreign key
         return true;
+    }
+
+    @Override
+    public void createRide(RideFormDto rideFormDto, User user, Car foundCar) throws InterruptedException, ApiException, IOException {
+        this.save(Ride.builder()
+                .rideTime(Time.valueOf(LocalTime.now()))
+                .rideDate(rideFormDto.getDate())
+                .startPoint(locationMapper.fromCoordsToLocation(rideFormDto.getOrigin()))
+                //.startPoint()
+               // .destination()
+                .car(foundCar)
+                .user(user)
+                .status(RideStatus.NEW_RIDE)
+                //.price()
+                .build()
+        );
+
     }
 
     @Override
@@ -66,17 +88,15 @@ public class RidesServiceImpl implements RidesService {
     }
 
     @Override
-    public double calculatePrice(String origin, String dest, RideType rideType) throws InterruptedException, ApiException, IOException {
+    public double calculatePrice(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException {
+        //TODO include carType in price, luxury must have higher cost than regular...
         double distance = JsonReader.getDriveDistance(origin, dest);
-
-        double price = (distance/1000) * priceFor1KM;
-        return price;
+        return (distance/1000) * priceFor1KM;
     }
 
     @Override
-    public String calculateTime(String origin, String dest, RideType rideType) throws InterruptedException, ApiException, IOException {
-        String time = JsonReader.getDriveTime(origin, dest);
-        return time;
+    public String calculateTime(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException {
+        return JsonReader.getDriveTime(origin, dest);
     }
 
 

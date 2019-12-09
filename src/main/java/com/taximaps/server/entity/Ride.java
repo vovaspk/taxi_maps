@@ -1,6 +1,5 @@
 package com.taximaps.server.entity;
 
-import com.google.maps.model.LatLng;
 import com.taximaps.server.entity.status.RideStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,8 +18,12 @@ import java.util.Date;
 public class Ride extends AbstractEntity{
     private Time rideTime;
     private Date rideDate;
-    private LatLng startPoint;
-    private LatLng destination;
+    @ManyToOne
+    @JoinColumn(name = "start_location_id")
+    private Location startPoint;
+    @ManyToOne
+    @JoinColumn(name = "dest_location_id")
+    private Location destination;
     @OneToOne
     @JoinColumn(name="car_id")
     private Car car;
@@ -29,12 +32,10 @@ public class Ride extends AbstractEntity{
     private User user;
     @Enumerated(value = EnumType.STRING)
     private RideStatus status;
-    @Enumerated(EnumType.STRING)
-    private RideType rideType = RideType.ORDINARY;
     private double price;
 
-    public Ride(Long id, Time rideTime, Date rideDate, LatLng startPoint, LatLng destination,
-                Car car, User user, RideStatus status, RideType rideType, double price) {
+    public Ride(Long id, Time rideTime, Date rideDate, Location startPoint, Location destination,
+                Car car, User user, RideStatus status, double price) {
         super(id);
         this.rideTime = rideTime;
         this.rideDate = rideDate;
@@ -43,7 +44,6 @@ public class Ride extends AbstractEntity{
         this.car = car;
         this.user = user;
         this.status = status;
-        this.rideType = rideType;
         this.price = price;
     }
 }

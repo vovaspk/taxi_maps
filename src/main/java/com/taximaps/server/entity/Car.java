@@ -19,7 +19,8 @@ public class Car extends AbstractEntity{
     private Location location;
     @Enumerated(EnumType.STRING)
     private CarStatus carStatus;
-
+    @Enumerated(EnumType.STRING)
+    private CarType CarType = com.taximaps.server.entity.CarType.ORDINARY;
     public Car(Long id, String name, Location location, CarStatus carStatus){
         super(id);
         this.name = name;

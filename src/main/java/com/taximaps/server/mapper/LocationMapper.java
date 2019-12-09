@@ -7,5 +7,6 @@ import java.io.IOException;
 
 public interface LocationMapper {
     String toStringLocation(double lat, double lng);
-    Location toLocation(String location) throws InterruptedException, ApiException, IOException;
+    Location fromCoordsToLocation(String location) throws InterruptedException, ApiException, IOException;
+    Location fromAddressToLocation(String location) throws InterruptedException, ApiException, IOException;
 }

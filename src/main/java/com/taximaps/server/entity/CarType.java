@@ -1,6 +1,6 @@
 package com.taximaps.server.entity;
 
-public enum  RideType {
+public enum CarType {
     ORDINARY,
     LUXURY,
     PET,
