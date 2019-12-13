@@ -13,5 +13,7 @@ public interface CarService {
     List<Car> findCarsByCarStatus(CarStatus carStatus);
     Car findNearestCarToLocationAndType(String location, CarType carType) throws InterruptedException, ApiException, IOException;
     void setCarFree(Car car);
+    void setCarOnWay(Car car);
+    void setCarRiding(Car car);
     void save(Car car);
 }

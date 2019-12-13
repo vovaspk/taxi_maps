@@ -81,8 +81,7 @@ public class MainController {
         System.out.println("price: " + price);
 
         //make method find nearest car (from available cars) and assign car to ride and make it non available
-        //TODO or find nearest car by type user picked,
-        Car foundCar = carService.findNearestCarToLocationAndType(destination, carType1);
+        Car foundCar = carService.findNearestCarToLocationAndType(origin, carType1);
         model.addAttribute("foundCarCoords", foundCar.getLocation().toString());
         System.out.println(foundCar.toString());
 

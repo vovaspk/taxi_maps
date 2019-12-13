@@ -39,8 +39,8 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car findNearestCarToLocationAndType(String location, CarType carType) throws InterruptedException, ApiException, IOException {
         Location givenLocation = locationMapper.fromCoordsToLocation(location);
-        List<Car> availableCars = carRepository.findCarsByCarStatusAnAndCarType(CarStatus.FREE, carType);
-        //double distance = Double.MAX_VALUE;
+        List<Car> availableCars = carRepository.findCarsByCarStatusAndCarType(CarStatus.FREE, carType);
+
         Map<Car, Double> carDoubleMap = new HashMap<>();
         for (Car tempCar : availableCars) {
             carDoubleMap.put(tempCar, distance(tempCar.getLocation().getLat(), tempCar.getLocation().getLng(), givenLocation.getLat(), givenLocation.getLng()));
@@ -60,6 +60,18 @@ public class CarServiceImpl implements CarService {
     @Override
     public void setCarFree(Car car) {
         car.setCarStatus(CarStatus.FREE);
+        carRepository.save(car);
+    }
+
+    @Override
+    public void setCarOnWay(Car car) {
+        car.setCarStatus(CarStatus.ONWAY);
+        carRepository.save(car);
+    }
+
+    @Override
+    public void setCarRiding(Car car) {
+        car.setCarStatus(CarStatus.RIDING);
         carRepository.save(car);
     }
 

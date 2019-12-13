@@ -10,6 +10,6 @@ import java.util.List;
 public interface CarRepository extends JpaRepository<Car,Long> {
     List<Car> findAll();
     List<Car> findCarsByCarStatus(CarStatus carStatus);
-    List<Car> findCarsByCarStatusAnAndCarType(CarStatus carStatus, CarType carType);
+    List<Car> findCarsByCarStatusAndCarType(CarStatus carStatus, CarType carType);
     //Car findNearestCarToLocation(String location);
 }

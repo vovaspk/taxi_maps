@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.sql.Time;
@@ -18,10 +19,12 @@ import java.util.Date;
 public class Ride extends AbstractEntity{
     private Time rideTime;
     private Date rideDate;
-    @ManyToOne
+    @ManyToOne(/*cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}*/)
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "start_location_id")
     private Location startPoint;
-    @ManyToOne
+    @ManyToOne(/*cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}*/)
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "dest_location_id")
     private Location destination;
     @OneToOne

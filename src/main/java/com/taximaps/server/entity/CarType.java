@@ -6,5 +6,4 @@ public enum CarType {
     PET,
     GROUP;
 
-
 }

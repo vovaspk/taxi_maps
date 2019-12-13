@@ -8,6 +8,7 @@ import com.taximaps.server.entity.dto.RideFormDto;
 import com.taximaps.server.entity.status.RideStatus;
 import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.maps.JsonReader;
+import com.taximaps.server.repository.LocationRepository;
 import com.taximaps.server.repository.RidesRepository;
 import com.taximaps.server.entity.Ride;
 import com.taximaps.server.service.CarService;
@@ -27,6 +28,7 @@ import java.util.List;
 public class RidesServiceImpl implements RidesService {
 
     private RidesRepository ridesRepository;
+    private LocationRepository locationRepository;
     private CarService carService;
     private LocationMapper locationMapper;
     private static final double timeFor1KM = 2.5;
@@ -48,18 +50,18 @@ public class RidesServiceImpl implements RidesService {
     @Override
     public boolean save(Ride ride) {
         ridesRepository.save(ride);
-//        new java.util.Timer().schedule(
-//                new java.util.TimerTask() {
-//                    @Override
-//                    public void run() {
-//
-//                      carService.setCarFree(ride.getCar());
-//                    }
-//                },
-//                5000
-//        ride.getRideTime().getTime();
-//        );
-        //TODO check if carService setCar free changes car to free in ride table with foreign key
+        carService.setCarOnWay(ride.getCar());
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+
+                      carService.setCarFree(ride.getCar());
+                    }
+                },
+                //10000
+        ride.getRideTime().getTime()
+        );
         return true;
     }
 
@@ -69,8 +71,6 @@ public class RidesServiceImpl implements RidesService {
                 .rideTime(Time.valueOf(LocalTime.now()))
                 .rideDate(rideFormDto.getDate())
                 .startPoint(locationMapper.fromCoordsToLocation(rideFormDto.getOrigin()))
-                //.startPoint()
-               // .destination()
                 .car(foundCar)
                 .user(user)
                 .status(RideStatus.NEW_RIDE)
