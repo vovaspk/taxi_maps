@@ -57,11 +57,14 @@ public class RidesServiceImpl implements RidesService {
                     public void run() {
 
                       carService.setCarFree(ride.getCar());
+                      carService.changeCarLocation(ride.getCar(), ride.getDestination());
+
                     }
                 },
-                //10000
-        ride.getRideTime().getTime()
+                12000
+        //ride.getRideTime().getTime()
         );
+        long tm = ride.getRideTime().getTime();
         return true;
     }
 
@@ -95,8 +98,13 @@ public class RidesServiceImpl implements RidesService {
     }
 
     @Override
-    public String calculateTime(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException {
+    public String calculateTimeOfRide(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException {
         return JsonReader.getDriveTime(origin, dest);
+    }
+
+    @Override
+    public String calculateTimeFromDriverToPassanger(String passangerLocation, String driverLocation, CarType carType) throws InterruptedException, ApiException, IOException {
+        return JsonReader.getDriveTime(driverLocation, passangerLocation);
     }
 
 

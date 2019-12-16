@@ -80,6 +80,12 @@ public class CarServiceImpl implements CarService {
         carRepository.save(car);
     }
 
+    @Override
+    public void changeCarLocation(Car car, Location location) {
+        car.setLocation(location);
+        carRepository.save(car);
+    }
+
     private double distance(double lat1, double lon1, double lat2, double lon2) {
         // haversine great circle distance approximation, returns meters
         double theta = lon1 - lon2;

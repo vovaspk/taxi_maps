@@ -21,10 +21,12 @@ public class LocationMapperImpl implements LocationMapper {
     private LocationRepository locationRepository;
 
     @Override
-    public String toStringLocation(double lat, double lng) {
+    public String toStringLocation(double lat, double lng) throws InterruptedException, ApiException, IOException {
         Location location = new Location();
+        String address = toAddressLocation(lat, lng);
         location.setLat(lat);
         location.setLng(lng);
+        location.setAddress(address);
         return location.toString();
     }
 
@@ -42,26 +44,19 @@ public class LocationMapperImpl implements LocationMapper {
 
         String lat = convertedLocation.split(",")[0];
         String lng = convertedLocation.split(",")[1];
-        Location locationIfFound =  availableLocations.stream()
-                .skip(8)
-                .filter(location -> location.getLat() == Double.parseDouble(lat)
-                     && location.getLat() == Double.parseDouble(lng))
-                .findFirst().get();
-        if(locationIfFound != null){
-            return locationIfFound;
-        }
-        Location location1 = locationRepository.findLocationByLatContainsAndLngContains(lat, lng);
-        if (location1 != null) {
+        String address = toAddressLocation(Double.parseDouble(lat), Double.parseDouble(lng));
 
-            location1.setLng(Double.parseDouble(lng));
-            location1.setLat(Double.parseDouble(lat));
-            return location1;
-        }else
-            location1 = new Location();
-        location1.setLng(Double.parseDouble(lng));
-        location1.setLat(Double.parseDouble(lat));
-        locationRepository.save(location1);
-        return location1;
+        Location locationIfFound = new Location();
+        for(Location location : availableLocations){
+            if(location.getAddress().equalsIgnoreCase(address)){
+                return location;
+            }
+        }
+        locationIfFound.setLat(Double.parseDouble(lat));
+        locationIfFound.setLng(Double.parseDouble(lng));
+        locationIfFound.setAddress(address);
+        locationRepository.save(locationIfFound);
+        return locationIfFound;
     }
 
     @Override

@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
-import java.util.Date;
+import java.util.Locale;
 
 import static com.taximaps.server.maps.JsonReader.*;
 
@@ -56,7 +58,7 @@ public class MainController {
     }
 
     @PostMapping(value = "/processInput", produces = "text/html")
-    public String getOriginAndDestFromUser(@RequestParam String origin, @RequestParam String destination, @RequestParam String carType, Date date, Model model, HttpServletRequest req) throws IOException, ApiException, InterruptedException {
+    public String getOriginAndDestFromUser(@RequestParam String origin, @RequestParam String destination, @RequestParam String carType, @RequestParam String date, Model model, HttpServletRequest req) throws IOException, ApiException, InterruptedException, ParseException {
         model.addAttribute("origin", origin);
         model.addAttribute("destination", destination);
         model.addAttribute("cars", carService.findAll());
@@ -68,11 +70,10 @@ public class MainController {
         model.addAttribute("destPlaceId", destPlaceId);
 
         CarType carType1 = CarType.valueOf(carType.toUpperCase());
-
-
         User user = getUser(req);
         double price = ridesService.calculatePrice(origin,destination, carType1);
-        String timeOfRide = ridesService.calculateTime(origin, destination, carType1);
+        String timeOfRide = ridesService.calculateTimeOfRide(origin, destination, carType1);
+
         model.addAttribute("timeOfRide", timeOfRide);
         model.addAttribute("price", price);
         model.addAttribute("testPrice", price);
@@ -84,6 +85,8 @@ public class MainController {
         Car foundCar = carService.findNearestCarToLocationAndType(origin, carType1);
         model.addAttribute("foundCarCoords", foundCar.getLocation().toString());
         System.out.println(foundCar.toString());
+        //TODO add time
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyy", Locale.ENGLISH);
 
         ridesService.save(Ride.builder()
                 .startPoint(locationMapper.fromAddressToLocation(origin))
@@ -91,7 +94,7 @@ public class MainController {
         .price(price)
         .user(user)
         .car(foundCar)
-        .rideDate(date)
+        .rideDate(formatter.parse(date))
                 //provide user ability to choose date and time
         .rideTime(Time.valueOf(LocalTime.now()))
         .status(RideStatus.NEW_RIDE)

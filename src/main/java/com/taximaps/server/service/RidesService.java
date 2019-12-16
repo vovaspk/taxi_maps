@@ -19,5 +19,6 @@ public interface RidesService {
     void createRide(RideFormDto rideFormDto, User user, Car car) throws InterruptedException, ApiException, IOException;
     void updateRideStatus(RideStatus status, Long rideId);
     double calculatePrice(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException;
-    String calculateTime(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException;
+    String calculateTimeOfRide(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException;
+    String calculateTimeFromDriverToPassanger(String passangerLocation, String driverLocation, CarType carType) throws InterruptedException, ApiException, IOException;
 }

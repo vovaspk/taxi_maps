@@ -3,6 +3,7 @@ package com.taximaps.server.service;
 import com.google.maps.errors.ApiException;
 import com.taximaps.server.entity.Car;
 import com.taximaps.server.entity.CarType;
+import com.taximaps.server.entity.Location;
 import com.taximaps.server.entity.status.CarStatus;
 
 import java.io.IOException;
@@ -16,4 +17,5 @@ public interface CarService {
     void setCarOnWay(Car car);
     void setCarRiding(Car car);
     void save(Car car);
+    void changeCarLocation(Car car, Location location);
 }
