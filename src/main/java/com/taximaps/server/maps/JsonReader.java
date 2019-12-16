@@ -199,13 +199,19 @@ public class JsonReader {
 
     }
 
+    public static String getAddressLocationFromCoords(double lat, double lng) throws InterruptedException, ApiException, IOException {
+        GeocodingApiRequest request = GeocodingApi.reverseGeocode(getGeoContext(), new LatLng(lat, lng));
+        GeocodingResult result = request.await()[0];
+        return result.formattedAddress;
+    }
+
 
 
     private static GeoApiContext getGeoContext() {
-        GeoApiContext geoApiContext = new GeoApiContext.Builder()
+        return new GeoApiContext.Builder()
                 .apiKey(API_KEY)
                 .build();
-        return geoApiContext;
+
     }
 
 }

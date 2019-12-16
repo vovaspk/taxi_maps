@@ -11,5 +11,6 @@ public interface CarRepository extends JpaRepository<Car,Long> {
     List<Car> findAll();
     List<Car> findCarsByCarStatus(CarStatus carStatus);
     List<Car> findCarsByCarStatusAndCarType(CarStatus carStatus, CarType carType);
+    Integer countAllByCarStatus(CarStatus carStatus);
     //Car findNearestCarToLocation(String location);
 }

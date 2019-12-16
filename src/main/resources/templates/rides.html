@@ -3,16 +3,18 @@
 <head>
     <meta charset="utf-8">
     <title>Your Rides</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 </head>
 <body>
-here are your rides
-
+<div id="nv" th:replace="parts/navbar.html"></div>
+<h3>Your rides:</h3>
 
 <tr th:each="ride: ${userRides}">
-    <td th:text="${ride.getStartPoint()}" />
-    <td th:text="${ride.getDestination()}" />
-    <td th:text="${ride.getRideDate()}" />
-    <td th:text="${ride.getPrice()}" />
+   start: <td th:text="${ride.getStartPoint()}" />
+   destination: <td th:text="${ride.getDestination()}" />
+   date: <td th:text="${ride.getRideDate()}" />
+   price: <td th:text="${ride.getPrice()}" />
 
 </tr>
 </body>

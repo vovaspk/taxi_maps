@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import static com.taximaps.server.maps.JsonReader.getGeocodeCoordinats;
 
@@ -28,7 +27,13 @@ public class LocationMapperImpl implements LocationMapper {
         location.setLng(lng);
         return location.toString();
     }
-//check if coords already exists in db then get from db end return it
+
+    @Override
+    public String toAddressLocation(double lat, double lng) throws InterruptedException, ApiException, IOException {
+        return JsonReader.getAddressLocationFromCoords(lat, lng);
+    }
+
+    //check if coords already exists in db then get from db end return it
     @Override
     public Location fromCoordsToLocation(String coords) throws InterruptedException, ApiException, IOException {
         List<Location> availableLocations = locationRepository.findAll();
