@@ -36,6 +36,7 @@ public class Car extends AbstractEntity{
                 "name='" + name + '\'' +
                 ", location=" + location +
                 ", carStatus=" + carStatus +
+                ", carType=" + carType +
                 '}';
     }
 }

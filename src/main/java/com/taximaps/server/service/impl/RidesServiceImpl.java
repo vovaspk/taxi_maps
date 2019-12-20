@@ -50,7 +50,11 @@ public class RidesServiceImpl implements RidesService {
     @Override
     public boolean save(Ride ride) {
         ridesRepository.save(ride);
-        carService.setCarOnWay(ride.getCar());
+        carService.setCarOnWay(ride.getCar(), ride.getStartPoint().getAddress());
+        log.info("car is on way to: ", ride.getCar().getLocation().getAddress());
+
+        //make maybe another timer for car to ride to passanger
+
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
                     @Override
@@ -61,7 +65,7 @@ public class RidesServiceImpl implements RidesService {
 
                     }
                 },
-                12000
+                15000
         //ride.getRideTime().getTime()
         );
         long tm = ride.getRideTime().getTime();

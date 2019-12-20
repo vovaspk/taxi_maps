@@ -13,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -29,6 +26,13 @@ public class CarServiceImpl implements CarService {
     @Override
     public List<Car> findAll() {
         return carRepository.findAll();
+    }
+
+    @Override
+    public List<String> getCarsInfo() {
+        List<String> carsInfo = new ArrayList<>();
+
+        return carsInfo;
     }
 
     @Override
@@ -47,7 +51,7 @@ public class CarServiceImpl implements CarService {
         }
 
         Car foundCar = Collections.min(carDoubleMap.entrySet(), Map.Entry.comparingByValue()).getKey();
-
+        log.info("found nearest car to location: ", foundCar.getLocation().getAddress());
 //        return availableCars
 //                .stream()
 //                .sorted()
@@ -61,18 +65,21 @@ public class CarServiceImpl implements CarService {
     public void setCarFree(Car car) {
         car.setCarStatus(CarStatus.FREE);
         carRepository.save(car);
+        log.info("car is free: ", car);
     }
 
     @Override
-    public void setCarOnWay(Car car) {
+    public void setCarOnWay(Car car, String address) {
         car.setCarStatus(CarStatus.ONWAY);
         carRepository.save(car);
+        log.info("car is on way to: ", car, address);
     }
 
     @Override
     public void setCarRiding(Car car) {
         car.setCarStatus(CarStatus.RIDING);
         carRepository.save(car);
+        log.info("car is riding: ", car);
     }
 
     @Override
@@ -84,6 +91,7 @@ public class CarServiceImpl implements CarService {
     public void changeCarLocation(Car car, Location location) {
         car.setLocation(location);
         carRepository.save(car);
+        log.info("car is now here: ", location.getAddress());
     }
 
     private double distance(double lat1, double lon1, double lat2, double lon2) {

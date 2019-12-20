@@ -58,7 +58,7 @@ public class MainController {
     }
 
     @PostMapping(value = "/processInput", produces = "text/html")
-    public String getOriginAndDestFromUser(@RequestParam String origin, @RequestParam String destination, @RequestParam String carType, @RequestParam String date, Model model, HttpServletRequest req) throws IOException, ApiException, InterruptedException, ParseException {
+    public String processInput(@RequestParam String origin, @RequestParam String destination, @RequestParam String carType, @RequestParam String date, Model model, HttpServletRequest req) throws IOException, ApiException, InterruptedException, ParseException {
         model.addAttribute("origin", origin);
         model.addAttribute("destination", destination);
         model.addAttribute("cars", carService.findAll());
@@ -72,6 +72,7 @@ public class MainController {
         CarType carType1 = CarType.valueOf(carType.toUpperCase());
         User user = getUser(req);
         double price = ridesService.calculatePrice(origin,destination, carType1);
+
         String timeOfRide = ridesService.calculateTimeOfRide(origin, destination, carType1);
 
         model.addAttribute("timeOfRide", timeOfRide);
@@ -85,6 +86,7 @@ public class MainController {
         Car foundCar = carService.findNearestCarToLocationAndType(origin, carType1);
         model.addAttribute("foundCarCoords", foundCar.getLocation().toString());
         System.out.println(foundCar.toString());
+        String timeToPassanger = ridesService.calculateTimeFromDriverToPassanger(origin,foundCar.getLocation().getAddress(), foundCar.getCarType());
         //TODO add time
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyy", Locale.ENGLISH);
 

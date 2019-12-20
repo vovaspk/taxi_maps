@@ -139,6 +139,9 @@ it takes:
 <div id="foundCarCoords">
     <p th:text="${foundCarCoords}"/>
 </div>
+<div id="carsInfo">
+    <p th:text="${carsInfo}"/>
+</div>
 <!--    DISTANTION(meters), duration: <p th:text="${dist}"> </p>-->
 <!--<div id="start" >start: <p th:text="${start}"></p> </div>-->
 <!--<div id="end">end: <p th:text="${end}"></p> </div>-->
@@ -158,6 +161,7 @@ Price : <p th:text="${price}"></p>
     var destPlaceId = document.getElementById("destPlaceId").innerText;
     var carLocations = document.getElementById("carLocations").innerText;
     var cars = document.getElementById("cars").innerText;
+    var carsInfo = document.getElementById("carsInfo");
     console.log(document.getElementById("cars"));
     var readyCars = cars.split(" ");
 

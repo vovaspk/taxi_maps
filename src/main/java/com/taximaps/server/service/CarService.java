@@ -11,10 +11,11 @@ import java.util.List;
 
 public interface CarService {
     List<Car> findAll();
+    List<String> getCarsInfo();
     List<Car> findCarsByCarStatus(CarStatus carStatus);
     Car findNearestCarToLocationAndType(String location, CarType carType) throws InterruptedException, ApiException, IOException;
     void setCarFree(Car car);
-    void setCarOnWay(Car car);
+    void setCarOnWay(Car car, String address);
     void setCarRiding(Car car);
     void save(Car car);
     void changeCarLocation(Car car, Location location);
