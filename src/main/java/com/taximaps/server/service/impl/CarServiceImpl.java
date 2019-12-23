@@ -72,14 +72,14 @@ public class CarServiceImpl implements CarService {
     public void setCarOnWay(Car car, String address) {
         car.setCarStatus(CarStatus.ONWAY);
         carRepository.save(car);
-        log.info("car is on way to: ", car, address);
+        log.info("car is on way to: ", car.getName(), address);
     }
 
     @Override
     public void setCarRiding(Car car) {
         car.setCarStatus(CarStatus.RIDING);
         carRepository.save(car);
-        log.info("car is riding: ", car);
+        log.info("car is riding: ", car.getName());
     }
 
     @Override
@@ -91,7 +91,7 @@ public class CarServiceImpl implements CarService {
     public void changeCarLocation(Car car, Location location) {
         car.setLocation(location);
         carRepository.save(car);
-        log.info("car is now here: ", location.getAddress());
+        log.info("car is now here: ", car.getLocation().getAddress());
     }
 
     private double distance(double lat1, double lon1, double lat2, double lon2) {

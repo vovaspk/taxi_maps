@@ -51,8 +51,7 @@ public class RidesServiceImpl implements RidesService {
     public boolean save(Ride ride) {
         ridesRepository.save(ride);
         carService.setCarOnWay(ride.getCar(), ride.getStartPoint().getAddress());
-        log.info("car is on way to: ", ride.getCar().getLocation().getAddress());
-
+        ride.setStatus(RideStatus.RIDE_ASSIGNED_TO_DRIVER);
         //make maybe another timer for car to ride to passanger
 
         new java.util.Timer().schedule(
@@ -62,6 +61,7 @@ public class RidesServiceImpl implements RidesService {
 
                       carService.setCarFree(ride.getCar());
                       carService.changeCarLocation(ride.getCar(), ride.getDestination());
+                      ride.setStatus(RideStatus.RIDE_ENDED);
 
                     }
                 },

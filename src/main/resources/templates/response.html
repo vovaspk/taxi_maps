@@ -161,14 +161,11 @@ Price : <p th:text="${price}"></p>
     // var destination = document.getElementById("destination").innerText;
     var originPlaceId = document.getElementById("originPlaceId").innerText;
     var destPlaceId = document.getElementById("destPlaceId").innerText;
-    var carLocations = document.getElementById("carLocations").innerText;
     var cars = document.getElementById("cars").innerText;
     var carsInfo = document.getElementById("carsInfo");
-    console.log(document.getElementById("cars"));
     var readyCars = cars.split(" ");
 
 
-    initMap();
     function initMap() {
         var directionsService = new google.maps.DirectionsService();
         var directionsRenderer = new google.maps.DirectionsRenderer();
@@ -185,13 +182,13 @@ Price : <p th:text="${price}"></p>
         };
 
         document.getElementById('showDirection').addEventListener('click', onChangeHandler);
-        /**for(var i=0;i<readyCars.length;i++){
-            addMarker(readyCars[i]);
-        }**/
+        //for(var i=0;i<readyCars.length;i++){
+        //    addMarker(readyCars[i]);
+        //}
 
 
     }
-
+    initMap();
 
     function addMarker(coords){
 
@@ -233,7 +230,7 @@ Price : <p th:text="${price}"></p>
                 }
             });
 
-        addMarker(document.getElementById("foundCarCoords").innerText);
+        //addMarker(document.getElementById("foundCarCoords").innerText);
     }
 </script>
 

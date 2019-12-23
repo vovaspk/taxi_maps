@@ -26,9 +26,7 @@ function addTodo(data, suc) {
         dataType: "json"
     });
 }
-setTimeout(() => getCars(), 3000);
 
-setInterval(() => updatePositionCars(), 2000);
 var markerGlobal = [];
 function getCars() {
     $.ajax({
@@ -80,7 +78,11 @@ function updatePositionCars() {
         success: function(data){
         for(var i in data){
             var car = data[i];
-            markerGlobal[car.id].setPosition(new google.maps.LatLng(car.location.lat, car.location.lng));
+            if(typeof markerGlobal[car.id] === "undefined"){
+
+            }else{
+                markerGlobal[car.id].setPosition(new google.maps.LatLng(car.location.lat, car.location.lng));
+            }
 
         }
 
@@ -88,6 +90,24 @@ function updatePositionCars() {
         dataType: "json"
     });
 }
+
+setTimeout(() => getCars(), 3000);
+
+setInterval(() => updatePositionCars(), 2000);
+
+$(document.getElementById('foundCarCoords')).ready( function(){
+
+    var foundCarIndex = document.getElementById("foundCarCoords").innerText;
+        if(markerGlobal[foundCarIndex] != undefined){
+            markerGlobal[foundCarIndex].getAnimation();
+            console.log('found right car');
+        }else{
+            console.log('cannot find right car');
+        }
+})
+
+
+
 
 function getAllCars(data, suc) {
     $.ajax({
@@ -142,6 +162,10 @@ function triggerTodo(id, suc) {
         success: suc,
         dataType: "json"
     });
+}
+
+function getFoundCarCoords() {
+    return $("#foundCarCoords").val();
 }
 
 function showEditor() {
