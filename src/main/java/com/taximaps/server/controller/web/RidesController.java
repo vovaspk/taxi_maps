@@ -23,6 +23,8 @@ public class RidesController {
     private RidesService ridesService;
     private LocationMapper locationMapper;
 
+
+
     @GetMapping("/rides")
     public String getRidesList(HttpServletRequest req, Model model) {
         User user = getUser(req);

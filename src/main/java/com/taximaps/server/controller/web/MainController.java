@@ -93,7 +93,7 @@ public class MainController {
         Car foundCar = carService.findNearestCarToLocationAndType(origin, carType1);
         model.addAttribute("foundCarCoords", foundCar.getId()/*getLocation().getAddress()*/);
         //System.out.println(foundCar.toString());
-        String timeToPassanger = ridesService.calculateTimeFromDriverToPassanger(origin,foundCar.getLocation().getAddress(), foundCar.getCarType());
+        //String timeToPassanger = ridesService.calculateTimeFromDriverToPassanger(origin,foundCar.getLocation().getAddress(), foundCar.getCarType());
         //TODO add time
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyy", Locale.ENGLISH);
 

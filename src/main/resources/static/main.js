@@ -28,6 +28,7 @@ function addTodo(data, suc) {
 }
 
 var markerGlobal = [];
+var foundCar = {};
 function getCars() {
     $.ajax({
         type: "GET",
@@ -91,6 +92,23 @@ function updatePositionCars() {
     });
 }
 
+function findNearestCar(data, suc) {
+    $.ajax({
+        type: "GET",
+        url: "/cars/find",
+        data: data,
+        headers:
+            {
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+        success: function(data){
+
+
+        },
+        dataType: "json"
+    });
+}
+
 setTimeout(() => getCars(), 3000);
 
 setInterval(() => updatePositionCars(), 2000);
@@ -105,8 +123,6 @@ $(document.getElementById('foundCarCoords')).ready( function(){
             console.log('cannot find right car');
         }
 })
-
-
 
 
 function getAllCars(data, suc) {
