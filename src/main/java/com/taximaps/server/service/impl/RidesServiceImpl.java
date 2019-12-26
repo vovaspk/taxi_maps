@@ -1,7 +1,6 @@
 package com.taximaps.server.service.impl;
 
 import com.google.maps.errors.ApiException;
-import com.taximaps.server.entity.Car;
 import com.taximaps.server.entity.CarType;
 import com.taximaps.server.entity.User;
 import com.taximaps.server.entity.dto.RideFormDto;
@@ -10,11 +9,13 @@ import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.maps.JsonReader;
 import com.taximaps.server.repository.LocationRepository;
 import com.taximaps.server.repository.RidesRepository;
-import com.taximaps.server.entity.Ride;
+import com.taximaps.server.entity.RideEntity;
+import com.taximaps.server.repository.UserRepository;
 import com.taximaps.server.service.CarService;
 import com.taximaps.server.service.RidesService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.math3.util.Precision;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -29,29 +30,30 @@ public class RidesServiceImpl implements RidesService {
 
     private RidesRepository ridesRepository;
     private LocationRepository locationRepository;
+    private UserRepository userRepository;
     private CarService carService;
     private LocationMapper locationMapper;
     private static final double timeFor1KM = 2.5;
     private static final double priceFor1KM = 11;
 
-    public List<Ride> findAll() {
+    public List<RideEntity> findAll() {
         return ridesRepository.findAll();
     }
 
-    public List<Ride> findRidesByUserId(Long id) {
+    public List<RideEntity> findRidesByUserId(Long id) {
         return ridesRepository.findRidesByUserId(id);
     }
 
     @Override
-    public Ride findRideById(Long id) {
+    public RideEntity findRideById(Long id) {
         return ridesRepository.findRideById(id);
     }
 
     @Override
-    public boolean save(Ride ride) {
-        ridesRepository.save(ride);
-        carService.setCarOnWay(ride.getCar(), ride.getStartPoint().getAddress());
-        ride.setStatus(RideStatus.RIDE_ASSIGNED_TO_DRIVER);
+    public boolean save(RideEntity rideEntity) {
+        ridesRepository.save(rideEntity);
+        carService.setCarOnWay(rideEntity.getCar(), rideEntity.getStartPoint().getAddress());
+        rideEntity.setStatus(RideStatus.RIDE_ASSIGNED_TO_DRIVER);
         //make maybe another timer for car to ride to passanger
 
         new java.util.Timer().schedule(
@@ -59,39 +61,45 @@ public class RidesServiceImpl implements RidesService {
                     @Override
                     public void run() {
 
-                      carService.setCarFree(ride.getCar());
-                      carService.changeCarLocation(ride.getCar(), ride.getDestination());
-                      ride.setStatus(RideStatus.RIDE_ENDED);
+                      carService.setCarFree(rideEntity.getCar());
+                      carService.changeCarLocation(rideEntity.getCar(), rideEntity.getDestination());
+                      rideEntity.setStatus(RideStatus.RIDE_ENDED);
 
                     }
                 },
                 15000
         //ride.getRideTime().getTime()
         );
-        long tm = ride.getRideTime().getTime();
+        long tm = rideEntity.getRideTime().getTime();
         return true;
     }
 
     @Override
-    public void createRide(RideFormDto rideFormDto, User user, Car foundCar) throws InterruptedException, ApiException, IOException {
-        this.save(Ride.builder()
+    public RideFormDto createRide(RideFormDto rideFormDto,String userName) throws InterruptedException, ApiException, IOException {
+        User user = userRepository.findByUserName(userName);
+
+        double price = Precision.round(this.calculatePrice(rideFormDto.getOrigin(),rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType())),2);
+        String timeOfRide = this.calculateTimeOfRide(rideFormDto.getOrigin(),rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType()));
+
+        RideEntity ride = ridesRepository.save(RideEntity.builder()
                 .rideTime(Time.valueOf(LocalTime.now()))
                 .rideDate(rideFormDto.getDate())
-                .startPoint(locationMapper.fromCoordsToLocation(rideFormDto.getOrigin()))
-                .car(foundCar)
-                .user(user)
-                .status(RideStatus.NEW_RIDE)
-                //.price()
-                .build()
-        );
+                .startPoint(locationMapper.fromAddressToLocation(rideFormDto.getOrigin()))
+                .destination(locationMapper.fromAddressToLocation(rideFormDto.getDestination()))
+                .price(price)
+                .rideTime(Time.valueOf(LocalTime.now()))
+                .build());
+        ridesRepository.save(ride);
+
+        return rideFormDto;
 
     }
 
     @Override
     public void updateRideStatus(RideStatus status, Long rideId) {
-        Ride ride = ridesRepository.findRideById(rideId);
-        ride.setStatus(status);
-        ridesRepository.save(ride);
+        RideEntity rideEntity = ridesRepository.findRideById(rideId);
+        rideEntity.setStatus(status);
+        ridesRepository.save(rideEntity);
     }
 
     @Override

@@ -8,13 +8,13 @@
 </head>
 <body>
 <div id="nv" th:replace="parts/navbar.html"></div>
-<h3>Your rides:</h3>
+<h3>Your rideEntities:</h3>
 
-<tr th:each="ride: ${userRides}">
-   start: <td th:text="${ride.getStartPoint()}" />
-   destination: <td th:text="${ride.getDestination()}" />
-   date: <td th:text="${ride.getRideDate()}" />
-   price: <td th:text="${ride.getPrice()}" />
+<tr th:each="rideEntity: ${userRideEntities}">
+   start: <td th:text="${rideEntity.getStartPoint()}" />
+   destination: <td th:text="${rideEntity.getDestination()}" />
+   date: <td th:text="${rideEntity.getRideDate()}" />
+   price: <td th:text="${rideEntity.getPrice()}" />
 
 </tr>
 </body>

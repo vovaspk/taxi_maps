@@ -8,5 +8,6 @@ import java.util.Date;
 public class RideFormDto {
     private String origin;
     private String destination;
+    private String carType;
     private Date date;
 }

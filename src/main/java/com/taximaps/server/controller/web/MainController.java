@@ -3,7 +3,7 @@ package com.taximaps.server.controller.web;
 import com.google.maps.errors.ApiException;
 import com.taximaps.server.entity.Car;
 import com.taximaps.server.entity.CarType;
-import com.taximaps.server.entity.Ride;
+import com.taximaps.server.entity.RideEntity;
 import com.taximaps.server.entity.User;
 import com.taximaps.server.entity.dto.UserProfileFormDto;
 import com.taximaps.server.entity.status.RideStatus;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.Time;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -97,7 +96,7 @@ public class MainController {
         //TODO add time
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyy", Locale.ENGLISH);
 
-        ridesService.save(Ride.builder()
+        ridesService.save(RideEntity.builder()
                 .startPoint(locationMapper.fromAddressToLocation(origin))
         .destination(locationMapper.fromAddressToLocation(destination))
         .price(price)

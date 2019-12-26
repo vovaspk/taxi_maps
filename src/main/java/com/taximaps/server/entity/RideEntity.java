@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Ride extends AbstractEntity{
+public class RideEntity extends AbstractEntity{
     private Time rideTime;
     private Date rideDate;
     @ManyToOne(/*cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}*/)
@@ -37,8 +37,8 @@ public class Ride extends AbstractEntity{
     private RideStatus status;
     private double price;
 
-    public Ride(Long id, Time rideTime, Date rideDate, Location startPoint, Location destination,
-                Car car, User user, RideStatus status, double price) {
+    public RideEntity(Long id, Time rideTime, Date rideDate, Location startPoint, Location destination,
+                      Car car, User user, RideStatus status, double price) {
         super(id);
         this.rideTime = rideTime;
         this.rideDate = rideDate;

@@ -1,14 +1,14 @@
 package com.taximaps.server.repository;
 
-import com.taximaps.server.entity.Ride;
+import com.taximaps.server.entity.RideEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface RidesRepository extends JpaRepository<Ride, Long> {
+public interface RidesRepository extends JpaRepository<RideEntity, Long> {
 
-    List<Ride> findAll();
-    Ride findRideById(Long id);
-    List<Ride> findRidesByUserId(Long id);
+    List<RideEntity> findAll();
+    RideEntity findRideById(Long id);
+    List<RideEntity> findRidesByUserId(Long id);
 
 }
