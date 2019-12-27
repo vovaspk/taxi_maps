@@ -2,14 +2,13 @@ package com.taximaps.server.service.impl;
 
 import com.google.maps.errors.ApiException;
 import com.taximaps.server.entity.CarType;
-import com.taximaps.server.entity.User;
+import com.taximaps.server.entity.RideEntity;
 import com.taximaps.server.entity.dto.RideFormDto;
 import com.taximaps.server.entity.status.RideStatus;
 import com.taximaps.server.mapper.LocationMapper;
+import com.taximaps.server.mapper.RideMapper;
 import com.taximaps.server.maps.JsonReader;
-import com.taximaps.server.repository.LocationRepository;
 import com.taximaps.server.repository.RidesRepository;
-import com.taximaps.server.entity.RideEntity;
 import com.taximaps.server.repository.UserRepository;
 import com.taximaps.server.service.CarService;
 import com.taximaps.server.service.RidesService;
@@ -19,9 +18,9 @@ import org.apache.commons.math3.util.Precision;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.sql.Time;
-import java.time.LocalTime;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Service
 @AllArgsConstructor
@@ -29,11 +28,9 @@ import java.util.List;
 public class RidesServiceImpl implements RidesService {
 
     private RidesRepository ridesRepository;
-    private LocationRepository locationRepository;
-    private UserRepository userRepository;
     private CarService carService;
-    private LocationMapper locationMapper;
-    private static final double timeFor1KM = 2.5;
+    private RideMapper rideMapper;
+
     private static final double priceFor1KM = 11;
 
     public List<RideEntity> findAll() {
@@ -57,42 +54,60 @@ public class RidesServiceImpl implements RidesService {
         //make maybe another timer for car to ride to passanger
 
         new java.util.Timer().schedule(
-                new java.util.TimerTask() {
+                new TimerTask() {
                     @Override
                     public void run() {
 
-                      carService.setCarFree(rideEntity.getCar());
-                      carService.changeCarLocation(rideEntity.getCar(), rideEntity.getDestination());
-                      rideEntity.setStatus(RideStatus.RIDE_ENDED);
+                        carService.setCarFree(rideEntity.getCar());
+                        carService.changeCarLocation(rideEntity.getCar(), rideEntity.getDestination());
+                        rideEntity.setStatus(RideStatus.RIDE_ENDED);
 
                     }
                 },
                 15000
-        //ride.getRideTime().getTime()
+                //ride.getRideTime().getTime()
         );
         long tm = rideEntity.getRideTime().getTime();
         return true;
     }
 
     @Override
-    public RideFormDto createRide(RideFormDto rideFormDto,String userName) throws InterruptedException, ApiException, IOException {
-        User user = userRepository.findByUserName(userName);
+    public RideFormDto createRide(RideFormDto rideFormDto, String userName) throws InterruptedException, ApiException, IOException {
 
-        double price = Precision.round(this.calculatePrice(rideFormDto.getOrigin(),rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType())),2);
-        String timeOfRide = this.calculateTimeOfRide(rideFormDto.getOrigin(),rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType()));
-
-        RideEntity ride = ridesRepository.save(RideEntity.builder()
-                .rideTime(Time.valueOf(LocalTime.now()))
-                .rideDate(rideFormDto.getDate())
-                .startPoint(locationMapper.fromAddressToLocation(rideFormDto.getOrigin()))
-                .destination(locationMapper.fromAddressToLocation(rideFormDto.getDestination()))
-                .price(price)
-                .rideTime(Time.valueOf(LocalTime.now()))
-                .build());
+        double price = this.roundPrice(rideFormDto);
+        String timeOfRide = this.calculateTimeOfRide(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType()));
+        RideEntity ride = rideMapper.toRideEntity(rideFormDto, userName);
+        ride.setPrice(price);
+       //TODO think where to put time of ride
         ridesRepository.save(ride);
 
+        carService.setCarOnWay(ride.getCar(), ride.getStartPoint().getAddress());
+        ride.setStatus(RideStatus.RIDE_ASSIGNED_TO_DRIVER);
+        //time for car to ride to passenger
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                ride.setStatus(RideStatus.RIDE_STARTED);
+            }
+        }, 15000);
+
+        new java.util.Timer().schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        carService.setCarFree(ride.getCar());
+                        carService.changeCarLocation(ride.getCar(), ride.getDestination());
+                        ride.setStatus(RideStatus.RIDE_ENDED);
+                    }
+                },
+                15000
+        );
         return rideFormDto;
 
+    }
+
+    public double roundPrice(RideFormDto rideFormDto) throws InterruptedException, ApiException, IOException {
+        return Precision.round(this.calculatePrice(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType())), 2);
     }
 
     @Override
@@ -104,9 +119,26 @@ public class RidesServiceImpl implements RidesService {
 
     @Override
     public double calculatePrice(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException {
-        //TODO include carType in price, luxury must have higher cost than regular...
+
         double distance = JsonReader.getDriveDistance(origin, dest);
-        return (distance/1000) * priceFor1KM;
+        double price = (distance/1000) * priceFor1KM;
+
+        switch (carType){
+            case PET:
+                price += 10;
+            break;
+            case LUXURY:
+                price += 25;
+                break;
+            case GROUP:
+                price += 15;
+                break;
+            default:
+                price = (distance/1000) * priceFor1KM;
+                break;
+        }
+
+        return price;
     }
 
     @Override

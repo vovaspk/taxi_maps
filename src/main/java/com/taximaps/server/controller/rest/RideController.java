@@ -36,7 +36,7 @@ public class RideController {
 
 
     @GetMapping("/rides")
-    public List<RideEntity> getRidesList(HttpServletRequest req, Model model) {
+    public List<RideEntity> getRidesList(HttpServletRequest req) {
         User user = getUser(req);
         List<RideEntity> userRideEntities = ridesService.findRidesByUserId(user.getId());
         //create form for ride shown in page to see start and dest in string, not it lat, lng

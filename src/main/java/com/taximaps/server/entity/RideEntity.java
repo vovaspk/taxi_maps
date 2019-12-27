@@ -16,6 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name = "ride")
 public class RideEntity extends AbstractEntity{
     private Time rideTime;
     private Date rideDate;
