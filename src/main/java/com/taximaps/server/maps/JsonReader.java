@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class JsonReader {
     public static JSONObject read(final String url) throws IOException, JSONException {
         final InputStream is = new URL(url).openStream();
         try {
-            final BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            final BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             final String jsonText = readAll(rd);
             final JSONObject json = new JSONObject(jsonText);
             return json;
@@ -92,15 +93,11 @@ public class JsonReader {
     private static String encodeParams(final Map<String, String> params) {
         final String paramsUrl = Joiner.on('&').join(// получаем значение вида key1=value1&key2=value2...
                 Iterables.transform(params.entrySet(), input -> {
-                    try {
-                        final StringBuffer buffer = new StringBuffer();
-                        buffer.append(input.getKey());// получаем значение вида key=value
-                        buffer.append('=');
-                        buffer.append(URLEncoder.encode(input.getValue(), "utf-8"));// кодируем строку в соответствии со стандартом HTML 4.01
-                        return buffer.toString();
-                    } catch (final UnsupportedEncodingException e) {
-                        throw new RuntimeException(e);
-                    }
+                    final StringBuffer buffer = new StringBuffer();
+                    buffer.append(input.getKey());// получаем значение вида key=value
+                    buffer.append('=');
+                    buffer.append(URLEncoder.encode(input.getValue(), StandardCharsets.UTF_8));// кодируем строку в соответствии со стандартом HTML 4.01
+                    return buffer.toString();
                 }));
         return paramsUrl;
     }

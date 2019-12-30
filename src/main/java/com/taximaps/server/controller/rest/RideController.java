@@ -26,7 +26,6 @@ public class RideController {
 
     private UserService userService;
     private RidesService ridesService;
-    private LocationMapper locationMapper;
 
     @PostMapping("/rides")
     public RideFormDto createRide(@RequestBody RideFormDto rideFormDto, Authentication authentication) throws InterruptedException, ApiException, IOException {
@@ -35,16 +34,14 @@ public class RideController {
     }
 
 
-    @GetMapping("/rides")
+    @GetMapping("/rides/all")
     public List<RideEntity> getRidesList(HttpServletRequest req) {
         User user = getUser(req);
         List<RideEntity> userRideEntities = ridesService.findRidesByUserId(user.getId());
-        //create form for ride shown in page to see start and dest in string, not it lat, lng
 
         return userRideEntities;
     }
 
-    //this will be page of specific ride
     @GetMapping("/rides/{id}")
     public RideEntity getRide(Model model, @PathVariable Long id) {
         RideEntity rideEntity = ridesService.findRideById(id);

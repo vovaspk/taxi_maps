@@ -4,6 +4,6 @@ public enum CarType {
     ORDINARY,
     LUXURY,
     PET,
-    GROUP;
+    GROUP
 
 }

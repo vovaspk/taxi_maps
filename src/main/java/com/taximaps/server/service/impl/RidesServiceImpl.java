@@ -82,12 +82,12 @@ public class RidesServiceImpl implements RidesService {
         ridesRepository.save(ride);
 
         carService.setCarOnWay(ride.getCar(), ride.getStartPoint().getAddress());
-        ride.setStatus(RideStatus.RIDE_ASSIGNED_TO_DRIVER);
+        updateRideStatus(RideStatus.RIDE_ASSIGNED_TO_DRIVER, ride.getId());
         //time for car to ride to passenger
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                ride.setStatus(RideStatus.RIDE_STARTED);
+                updateRideStatus(RideStatus.RIDE_STARTED, ride.getId());
             }
         }, 15000);
 
@@ -97,7 +97,7 @@ public class RidesServiceImpl implements RidesService {
                     public void run() {
                         carService.setCarFree(ride.getCar());
                         carService.changeCarLocation(ride.getCar(), ride.getDestination());
-                        ride.setStatus(RideStatus.RIDE_ENDED);
+                        updateRideStatus(RideStatus.RIDE_ENDED, ride.getId());
                     }
                 },
                 15000

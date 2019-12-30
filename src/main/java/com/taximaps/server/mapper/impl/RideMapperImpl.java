@@ -38,6 +38,7 @@ public class RideMapperImpl implements RideMapper {
         RideEntity rideEntity = RideEntity.builder()
                 .rideTime(Time.valueOf(LocalTime.now()))
                 .rideDate(rideFormDto.getDate())
+                .user(user)
                 .startPoint(locationMapper.fromAddressToLocation(rideFormDto.getOrigin()))
                 .destination(locationMapper.fromAddressToLocation(rideFormDto.getDestination()))
                 .car(foundCar)
