@@ -3,19 +3,43 @@
 <head>
     <meta charset="utf-8">
     <title>Your Rides</title>
+    <script src="jquery-3.4.1.min.js"></script>
+    <script src="rideshandle.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+<style>
+    #th {
+  text-align: left;
+}
+</style>
 </head>
 <body>
 <div id="nv" th:replace="parts/navbar.html"></div>
-<h3>Your rideEntities:</h3>
+<h3>Your rides:</h3>
 
-<tr th:each="rideEntity: ${userRideEntities}">
-   start: <td th:text="${rideEntity.getStartPoint()}" />
-   destination: <td th:text="${rideEntity.getDestination()}" />
-   date: <td th:text="${rideEntity.getRideDate()}" />
-   price: <td th:text="${rideEntity.getPrice()}" />
+<!--<tr th:each="rideEntity: ${userRideEntities}">-->
+<!--   start: <td th:text="${rideEntity.getStartPoint()}" />-->
+<!--   destination: <td th:text="${rideEntity.getDestination()}" />-->
+<!--   date: <td th:text="${rideEntity.getRideDate()}" />-->
+<!--   price: <td th:text="${rideEntity.getPrice()}" />-->
+<!--</tr>-->
 
-</tr>
+<div id="ridesList">
+    <table id="ridesTable" style="width:100%"  border="1">
+        <thead>
+        <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
