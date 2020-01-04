@@ -5,6 +5,7 @@
     <title>Hello</title>
     <script src="jquery-3.4.1.min.js"></script>
     <script src="main.js"></script>
+    <script src="rideCreator.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
         /* Always set the map height explicitly to define the size of the div
@@ -108,49 +109,17 @@
 </head>
 <body>
 <div id="nv" th:replace="parts/navbar.html"></div>
-<div id="originPlaceId">
-<p th:text="${originPlaceId}" ></p>
-</div>
-<div id="destPlaceId">
-<p th:text="${destPlaceId}"></p>
-</div>
-To get from
-<div id="origin">
-<p th:text="${origin}"></p>
-</div>
-to
-<div id="destination">
-<p th:text="${destination}"></p>
-</div>
-it takes:
-<!--<div id="response">-->
-<!--&lt;!&ndash;<p th:text="{response}"></p>&ndash;&gt;-->
-<!--</div>-->
-<div id="cars">
-    <tr th:each="car: ${cars}">
-        <td th:text="${car.getLocation()}" />
 
-    </tr>
-</div>
-<div id="carLocations">
-    <tr th:each="car: ${carLocations}">
-        <td th:text="${car}" />
 
-    </tr>
-</div>
-<div id="foundCarCoords">
-    <p th:text="${foundCarCoords}"/>
-</div>
-<div id="carsInfo">
-    <p th:text="${carsInfo}"/>
-</div>
+
 <!--    DISTANTION(meters), duration: <p th:text="${dist}"> </p>-->
 <!--<div id="start" >start: <p th:text="${start}"></p> </div>-->
 <!--<div id="end">end: <p th:text="${end}"></p> </div>-->
 <!--<div id="direct"><p th:text="${direct}"></p></div>-->
-Time of Ride: <p th:text="${timeOfRide}"></p>
-Price : <p th:text="${price}"></p>
-<button id="showDirection" type="submit">Confirm rideEntity</button>
+
+<!--Time of Ride: <p th:text="${timeOfRide}"></p>-->
+<!--Price : <p th:text="${price}"></p>-->
+<button id="showDirection" type="submit">Confirm Ride</button>
 <div id="map"></div>
 <script>
     var map;
@@ -207,17 +176,17 @@ Price : <p th:text="${price}"></p>
             options: {maxWidth: 200}
         });
 
-        marker.addListener('click', function() {
-                infoWindow.open(map, marker);
-        });
+        // marker.addListener('click', function() {
+        //         infoWindow.open(map, marker);
+        // });
     }
 
     function calculateAndDisplayRoute(directionsService, directionsRenderer) {
         console.log('goes to here 2');
         directionsService.route(
             {
-                origin: {query: document.getElementById("originPlaceId").innerText},
-                destination: {query: document.getElementById("destPlaceId").innerText}, //var end doesnt work here and request not found, should pass ltn and lng of start and dest and works fine
+                origin: {query: globalStart},
+                destination: {query: globalDest},
                 travelMode: 'DRIVING'
             },
             function(response, status) {
@@ -235,7 +204,7 @@ Price : <p th:text="${price}"></p>
     }
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBR4RT24iLNmr74yE168KRWz5qdjr3NhVc&callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBR4RT24iLNmr74yE168KRWz5qdjr3NhVc&callback=initMap&language=en"
         async defer></script>
 <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

@@ -49,7 +49,6 @@ public class MainController {
         model.addAttribute("origin", origin);
         model.addAttribute("destination", destination);
         model.addAttribute("cars", carService.findAll());
-        model.addAttribute("carLocations", CarCoordinatsUtils.getCoords());
 
         String originPlaceId = getGeocodeCoordinats(origin);
         String destPlaceId = getGeocodeCoordinats(destination);
@@ -93,6 +92,11 @@ public class MainController {
     private User getUser(HttpServletRequest req) {
         String userName = req.getUserPrincipal().getName();
         return (User) userService.loadUserByUsername(userName);
+    }
+
+    @GetMapping("/processInput")
+    public String getProcessInputPage(){
+        return PagesConstants.RESPONSE_PAGE;
     }
 
     @GetMapping("/getDist")

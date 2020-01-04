@@ -73,7 +73,7 @@ public class RidesServiceImpl implements RidesService {
 
     @Override
     public RideFormDto createRide(RideFormDto rideFormDto, String userName) throws InterruptedException, ApiException, IOException {
-
+        rideFormDto.setCarType(rideFormDto.getCarType().toUpperCase());
         double price = this.roundPrice(rideFormDto);
         String timeOfRide = this.calculateTimeOfRide(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType()));
         RideEntity ride = rideMapper.toRideEntity(rideFormDto, userName);

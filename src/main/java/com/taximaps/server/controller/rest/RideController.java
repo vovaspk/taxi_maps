@@ -8,6 +8,7 @@ import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.service.RidesService;
 import com.taximaps.server.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public class RideController {
     private UserService userService;
     private RidesService ridesService;
 
-    @PostMapping("/rides")
+    @PostMapping(value = "/rides", consumes = MediaType.APPLICATION_JSON_VALUE)
     public RideFormDto createRide(@RequestBody RideFormDto rideFormDto, Authentication authentication) throws InterruptedException, ApiException, IOException {
         String name = authentication.getName();
         return ridesService.createRide(rideFormDto, name);
