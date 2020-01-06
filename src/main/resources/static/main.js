@@ -49,7 +49,7 @@ function getCars() {
                             });
 
                             var infoCarWindow = new google.maps.InfoWindow({
-                                content: car.location.address,
+                                content: car.location.address + ", " + car.carType,
                                 options: {maxWidth: 200}
                             });
 
@@ -109,9 +109,9 @@ function findNearestCar(data, suc) {
     });
 }
 
-setTimeout(() => getCars(), 3000);
+setTimeout(() => getCars(), 2000);
 
-setInterval(() => updatePositionCars(), 2000);
+setInterval(() => updatePositionCars(), 1000);
 
 $(document.getElementById('foundCarCoords')).ready( function(){
 

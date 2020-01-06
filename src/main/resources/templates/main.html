@@ -78,10 +78,25 @@
             margin-left: 12px;
             padding: 0 11px 0 13px;
             text-overflow: ellipsis;
-            width: 400px;
+            width: 315px;
+        }
+
+        #pac-dest {
+            background-color: #fff;
+            font-family: Roboto;
+            font-size: 15px;
+            font-weight: 300;
+            margin-left: 5px;
+            padding: 0 11px 0 13px;
+            text-overflow: ellipsis;
+            width: 300px;
         }
 
         #pac-input:focus {
+            border-color: #4d90fe;
+        }
+
+        #pac-dest:focus {
             border-color: #4d90fe;
         }
 
@@ -97,7 +112,7 @@
 <body>
 
 <div id="nv" th:replace="parts/navbar.html"></div>
-<h3>Taxi Web System</h3>
+<h3 style=" margin-left: 12px;">Taxi Web System</h3>
 <div id="input-form">
     <form id="rideForm" class="rideForm" action="" method="post" >
         <input id="pac-input" type="text"  name="origin" placeholder="From">
@@ -241,6 +256,7 @@
         });
     } else {
         // Browser doesn't support Geolocation
+        //console.log('geolocation doesn't work');
         handleLocationError(false, infoWindow, map.getCenter());
 
     }

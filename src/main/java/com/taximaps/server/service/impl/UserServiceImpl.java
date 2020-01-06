@@ -1,5 +1,7 @@
 package com.taximaps.server.service.impl;
 
+import com.taximaps.server.entity.dto.UserDto;
+import com.taximaps.server.mapper.UserMapper;
 import com.taximaps.server.repository.UserRepository;
 import com.taximaps.server.entity.Role;
 import com.taximaps.server.entity.User;
@@ -21,6 +23,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
+    private UserMapper userMapper;
 
     public boolean addUser(User user){
         User userFromDB = userRepository.findByUserName(user.getUserName());
@@ -62,6 +65,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             userRepository.save(userFromDb);
         }
 
+    }
+
+    @Override
+    public UserDto getUserProfile(String name) {
+        User user = userRepository.findByUserName(name);
+        return userMapper.toUserDto(user);
     }
 
 

@@ -14,7 +14,7 @@ public interface RidesService {
     List<RideEntity> findRidesByUserId(Long id);
     RideEntity findRideById(Long id);
     boolean save(RideEntity rideEntity);
-    RideFormDto createRide(RideFormDto rideFormDto, String userName) throws InterruptedException, ApiException, IOException;
+    RideFormDto saveRide(RideFormDto rideFormDto, String userName) throws InterruptedException, ApiException, IOException;
     void updateRideStatus(RideStatus status, Long rideId);
     double calculatePrice(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException;
     String calculateTimeOfRide(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException;

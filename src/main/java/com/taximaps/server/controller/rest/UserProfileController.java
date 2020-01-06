@@ -1,23 +1,31 @@
 package com.taximaps.server.controller.rest;
 
+import com.taximaps.server.entity.dto.UserDto;
 import com.taximaps.server.entity.dto.UserProfileFormDto;
 import com.taximaps.server.mapper.UserMapper;
 import com.taximaps.server.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@AllArgsConstructor
 public class UserProfileController {
 
-    @Autowired
     private UserMapper userMapper;
-    @Autowired
     private UserService userService;
 
     @PostMapping("/update")
     public void update(UserProfileFormDto userProfileFormDto){
         userService.save(userMapper.toUserEntity(userProfileFormDto));
 
+    }
+
+    @GetMapping(value = "/getUser", produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserDto getUserProfile(Authentication authentication){
+        return userService.getUserProfile(authentication.getName());
     }
 }

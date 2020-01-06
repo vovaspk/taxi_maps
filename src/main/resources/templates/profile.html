@@ -1,7 +1,16 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+<head>
+    <title>Profile</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="jquery-3.4.1.min.js"></script>
+    <script src="userProfile.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
 <div id="nv" th:replace="parts/navbar.html"></div>
 Your profile <h2 th:text="${#request.userPrincipal.getName()}"></h2>
 <div class="container">
@@ -27,35 +36,35 @@ Your profile <h2 th:text="${#request.userPrincipal.getName()}"></h2>
             </div>
             <h3>Personal info</h3>
 
-            <form class="form-horizontal" role="form" th:object="${formDto}" th:action="@{/update}" action="/update" method="post">
+            <form id="userProfileForm" class="form-horizontal" role="form"  action="/update" method="post">
                 <div class="form-group">
                     <label class="col-lg-3 control-label">User Name:</label>
                     <div class="col-lg-8">
-                        <input class="form-control" type="text" th:field="*{name}" th:value="${name}">
+                        <input id="userNameField" class="form-control" type="text">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Email:</label>
                     <div class="col-lg-8">
-                        <input class="form-control" type="text" th:field="*{email}" th:value="${email}">
+                        <input id="EmailField" class="form-control" type="text">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-3 control-label">Enter your old password:</label>
                     <div class="col-md-8">
-                        <input class="form-control" type="password" >
+                        <input id="oldPassword" class="form-control" type="password" >
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-3 control-label">Password:</label>
                     <div class="col-md-8">
-                        <input class="form-control" type="password" th:field="*{password}" th:value="${password}">
+                        <input id="passwordField" class="form-control" type="password">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-3 control-label">Confirm password:</label>
                     <div class="col-md-8">
-                        <input class="form-control" type="password" value="11111122333">
+                        <input id="confirmPasswordField" class="form-control" type="password" value="11111122333">
                     </div>
                 </div>
                 <div class="form-group">
@@ -70,4 +79,5 @@ Your profile <h2 th:text="${#request.userPrincipal.getName()}"></h2>
         </div>
     </div>
 </div>
-<hr>
+</body>
+</html>

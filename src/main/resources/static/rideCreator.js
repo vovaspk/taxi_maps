@@ -32,8 +32,8 @@ $(document).ready(
             data["carType"] = $("#carType").val();
             data["date"] = $("#date").val();
 
-            globalStart = data["origin"];
-            globalDest = data["destination"];
+            globalStart = $("#pac-input").val();
+            globalDest = $("#pac-dest").val();
 
             $("#submitbtn").prop("disabled", true);
 
@@ -46,7 +46,15 @@ $(document).ready(
                 //timeout: 600000,
                 success: function (data) {
                     console.log("DONE");
-                    window.location.href("/processInput");
+
+                    setCookie('start', data.origin, 1);
+                    setCookie('dest', data.destination, 1);
+
+                    localStorage.setItem(data.start, "globalStart");
+                    localStorage.setItem(data.destination, "globalDest");
+
+                    window.location.href = '/processInput';
+
                 },
                 error: function (e) {
                     console.log("ERROR: ", e);
@@ -59,6 +67,29 @@ $(document).ready(
         });
 
     });
+
+    function setCookie(cname, cvalue, exdays) {
+      var d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      var expires = "expires="+ d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
 
 // function createRide(data) {
 //     $.ajax({

@@ -119,6 +119,7 @@
 
 <!--Time of Ride: <p th:text="${timeOfRide}"></p>-->
 <!--Price : <p th:text="${price}"></p>-->
+<div id="rideResultInfo"></div>
 <button id="showDirection" type="submit">Confirm Ride</button>
 <div id="map"></div>
 <script>
@@ -183,10 +184,11 @@
 
     function calculateAndDisplayRoute(directionsService, directionsRenderer) {
         console.log('goes to here 2');
+
         directionsService.route(
             {
-                origin: {query: globalStart},
-                destination: {query: globalDest},
+                origin: {query: getCookie('start')},
+                destination: {query: getCookie('dest')},
                 travelMode: 'DRIVING'
             },
             function(response, status) {
@@ -202,6 +204,23 @@
 
         //addMarker(document.getElementById("foundCarCoords").innerText);
     }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+             return c.substring(name.length, c.length);
+            }
+            }
+        return "";
+    }
+
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBR4RT24iLNmr74yE168KRWz5qdjr3NhVc&callback=initMap&language=en"

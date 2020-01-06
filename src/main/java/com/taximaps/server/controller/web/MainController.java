@@ -95,7 +95,8 @@ public class MainController {
     }
 
     @GetMapping("/processInput")
-    public String getProcessInputPage(){
+    public String getProcessInputPage(Model model){
+
         return PagesConstants.RESPONSE_PAGE;
     }
 

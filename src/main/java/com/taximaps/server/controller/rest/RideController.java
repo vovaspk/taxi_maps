@@ -31,8 +31,9 @@ public class RideController {
     @PostMapping(value = "/rides", consumes = MediaType.APPLICATION_JSON_VALUE)
     public RideFormDto createRide(@RequestBody RideFormDto rideFormDto, Authentication authentication) throws InterruptedException, ApiException, IOException {
         String name = authentication.getName();
-        return ridesService.createRide(rideFormDto, name);
+        return ridesService.saveRide(rideFormDto, name);
     }
+    //TODO make one page for ride handling, remove cookies and send variables through js files
 
 
     @GetMapping("/rides/all")
