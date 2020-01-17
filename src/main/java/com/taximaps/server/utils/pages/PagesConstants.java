@@ -9,4 +9,5 @@ public class PagesConstants {
     public static final String SPECIFIC_RIDE_PAGE = "ride";
     public static final String PROFILE_PAGE = "profile";
     public static final String ACTIONS_PAGE = "actions";
+    public static final String ADMIN_HOME_PAGE = "adminHome";
 }

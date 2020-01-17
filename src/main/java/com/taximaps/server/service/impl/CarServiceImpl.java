@@ -4,10 +4,13 @@ import com.google.maps.errors.ApiException;
 import com.taximaps.server.entity.Car;
 import com.taximaps.server.entity.CarType;
 import com.taximaps.server.entity.Location;
+import com.taximaps.server.entity.User;
 import com.taximaps.server.entity.status.CarStatus;
 import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.repository.CarRepository;
+import com.taximaps.server.repository.UserRepository;
 import com.taximaps.server.service.CarService;
+import com.taximaps.server.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ public class CarServiceImpl implements CarService {
 
     private CarRepository carRepository;
     private LocationMapper locationMapper;
+    private UserRepository userRepository;
 
     @Override
     public List<Car> findAll() {
@@ -47,7 +51,7 @@ public class CarServiceImpl implements CarService {
 
         Map<Car, Double> carDoubleMap = new HashMap<>();
         for (Car tempCar : availableCars) {
-            carDoubleMap.put(tempCar, distance(tempCar.getLocation().getLat(), tempCar.getLocation().getLng(), givenLocation.getLat(), givenLocation.getLng()));
+            carDoubleMap.put(tempCar, getDistance(givenLocation, tempCar));
         }
 
         Car foundCar = Collections.min(carDoubleMap.entrySet(), Map.Entry.comparingByValue()).getKey();
@@ -56,7 +60,7 @@ public class CarServiceImpl implements CarService {
 //        return availableCars
 //                .stream()
 //                .sorted()
-//                .min((car1, car2) -> distance(givenLocation.getLat(), givenLocation.getLng(),car1.getLocation().getLat(), car1.getLocation().getLng()))
+//                .min((car1, car2) -> getDistance(givenLocation, car1))
 //                .get();
         return foundCar;
     }
@@ -86,8 +90,8 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void save(Car car) {
-        carRepository.save(car);
+    public Car registerNewCar(Car car) {
+        return carRepository.save(car);
     }
 
     @Override
@@ -96,6 +100,31 @@ public class CarServiceImpl implements CarService {
         carRepository.save(car);
         log.info("car is now here: {}", car.getLocation().getAddress());
         System.out.println("car " + car.getName() + " is now here: " + car.getLocation().getAddress());
+    }
+
+    @Override
+    public void removeCar(Long id) {
+        Car car = carRepository.getOne(id);
+        if(carIsBusy(car)){
+            log.warn("trying to delete car {}, but car is riding now", car);
+        }
+        carRepository.delete(car);
+    }
+
+    @Override
+    public void assignDriverToCar(Long userId, Long carId) {
+        User user = userRepository.getOne(userId);
+        Car car = carRepository.getOne(carId);
+        car.setDriver(user);
+        carRepository.save(car);
+    }
+
+    private double getDistance(Location givenLocation, Car tempCar) {
+        return distance(tempCar.getLocation().getLat(), tempCar.getLocation().getLng(), givenLocation.getLat(), givenLocation.getLng());
+    }
+
+    private boolean carIsBusy(Car car){
+        return car.getCarStatus().equals(CarStatus.ONWAY) || car.getCarStatus().equals(CarStatus.RIDING);
     }
 
     private double distance(double lat1, double lon1, double lat2, double lon2) {

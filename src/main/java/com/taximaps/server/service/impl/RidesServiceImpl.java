@@ -53,7 +53,7 @@ public class RidesServiceImpl implements RidesService {
         rideEntity.setStatus(RideStatus.RIDE_ASSIGNED_TO_DRIVER);
         //make maybe another timer for car to ride to passanger
 
-        new java.util.Timer().schedule(
+        new Timer().schedule(
                 new TimerTask() {
                     @Override
                     public void run() {
@@ -76,6 +76,7 @@ public class RidesServiceImpl implements RidesService {
         rideFormDto.setCarType(rideFormDto.getCarType().toUpperCase());
         double price = this.roundPrice(rideFormDto);
         String timeOfRide = this.calculateTimeOfRide(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType()));
+
         RideEntity ride = rideMapper.toRideEntity(rideFormDto, userName);
         ride.setPrice(price);
        //TODO think where to put time of ride
@@ -91,7 +92,7 @@ public class RidesServiceImpl implements RidesService {
             }
         }, 15000);
 
-        new java.util.Timer().schedule(
+        new Timer().schedule(
                 new TimerTask() {
                     @Override
                     public void run() {

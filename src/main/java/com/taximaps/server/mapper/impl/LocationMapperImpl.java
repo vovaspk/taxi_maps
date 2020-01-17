@@ -17,7 +17,6 @@ import static com.taximaps.server.maps.JsonReader.getGeocodeCoordinats;
 @AllArgsConstructor
 public class LocationMapperImpl implements LocationMapper {
 
-    private JsonReader jsonReader;
     private LocationRepository locationRepository;
 
     @Override
@@ -44,26 +43,23 @@ public class LocationMapperImpl implements LocationMapper {
 
         String lat = convertedLocation.split(",")[0];
         String lng = convertedLocation.split(",")[1];
-        String address = toAddressLocation(Double.parseDouble(lat), Double.parseDouble(lng));
+        //String address = toAddressLocation(Double.parseDouble(lat), Double.parseDouble(lng));
 
         Location locationIfFound = new Location();
         for(Location location : availableLocations){
-            if(location.getAddress().equalsIgnoreCase(address)){
+            if(isSameLocation(coords, lat, lng, location)){
                 return location;
             }
         }
         locationIfFound.setLat(Double.parseDouble(lat));
         locationIfFound.setLng(Double.parseDouble(lng));
-        locationIfFound.setAddress(address);
+        locationIfFound.setAddress(coords);
         locationRepository.save(locationIfFound);
         return locationIfFound;
     }
 
-    @Override
-    public Location fromAddressToLocation(String location) throws InterruptedException, ApiException, IOException {
-
-        String geocodeCoordinats = getGeocodeCoordinats(location);
-
-        return fromCoordsToLocation(geocodeCoordinats);
+    private boolean isSameLocation(String coords, String lat, String lng, Location location) {
+        return location.getAddress().equalsIgnoreCase(coords) || ((location.getLat() == Double.parseDouble(lat) && location.getLng() == Double.parseDouble(lng)));
     }
+
 }

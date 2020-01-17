@@ -2,6 +2,7 @@ package com.taximaps.server.config;
 
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,7 +18,8 @@ import javax.sql.DataSource;
 @EnableWebMvc
 @ComponentScan({"com.taximaps.server"})
 @PropertySource({"classpath:/application.properties"})
-@EnableJpaRepositories("com.taximaps.server.repository")
+@EnableJpaRepositories(basePackages = "com.taximaps.server.repository")
+@EnableAutoConfiguration
 public class TestAppConfig extends WebMvcConfigurationSupport {
 
     @Bean

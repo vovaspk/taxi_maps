@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface CarRepository extends JpaRepository<Car,Long> {
+    Car findCarById(Long id);
     List<Car> findAll();
     List<Car> findCarsByCarStatus(CarStatus carStatus);
     List<Car> findCarsByCarStatusAndCarType(CarStatus carStatus, CarType carType);

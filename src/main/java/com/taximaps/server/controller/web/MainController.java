@@ -75,8 +75,8 @@ public class MainController {
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyy", Locale.ENGLISH);
 
         ridesService.save(RideEntity.builder()
-                .startPoint(locationMapper.fromAddressToLocation(origin))
-        .destination(locationMapper.fromAddressToLocation(destination))
+                .startPoint(locationMapper.fromCoordsToLocation(origin))
+        .destination(locationMapper.fromCoordsToLocation(destination))
         .price(price)
         .user(user)
         .car(foundCar)

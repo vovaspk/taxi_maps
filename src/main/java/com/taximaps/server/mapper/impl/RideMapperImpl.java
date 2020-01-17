@@ -39,8 +39,8 @@ public class RideMapperImpl implements RideMapper {
                 .rideTime(Time.valueOf(LocalTime.now()))
                 .rideDate(rideFormDto.getDate())
                 .user(user)
-                .startPoint(locationMapper.fromAddressToLocation(rideFormDto.getOrigin()))
-                .destination(locationMapper.fromAddressToLocation(rideFormDto.getDestination()))
+                .startPoint(locationMapper.fromCoordsToLocation(rideFormDto.getOrigin()))
+                .destination(locationMapper.fromCoordsToLocation(rideFormDto.getDestination()))
                 .car(foundCar)
                 .status(RideStatus.NEW_RIDE)
                 .build();

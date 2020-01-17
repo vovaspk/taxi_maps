@@ -20,14 +20,19 @@ public class CarController {
     private CarService carService;
 
 
-    @GetMapping("/cars/all")
-    public List<Car> getCars() {
+    @GetMapping("/cars/free")
+    public List<Car> getFreeCars() {
         return carService.findCarsByCarStatus(CarStatus.FREE);
     }
 
     @GetMapping("/cars/find")
     public Car findNearestCarToLocation(@RequestBody FindCarDto findCarDto) throws InterruptedException, ApiException, IOException {
         return carService.findNearestCarToLocationAndType(findCarDto.getAddress(), findCarDto.getCarType());
+    }
+
+    @GetMapping("/cars/all")
+    public List<Car> getAllCars(){
+        return carService.findAll();
     }
 
 

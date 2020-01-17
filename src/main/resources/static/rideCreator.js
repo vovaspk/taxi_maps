@@ -45,15 +45,14 @@ $(document).ready(
                 dataType: 'json',
                 //timeout: 600000,
                 success: function (data) {
-                    console.log("DONE");
 
                     setCookie('start', data.origin, 1);
                     setCookie('dest', data.destination, 1);
-
-                    localStorage.setItem(data.start, "globalStart");
-                    localStorage.setItem(data.destination, "globalDest");
-
                     window.location.href = '/processInput';
+
+                    //localStorage.setItem(data.start, "globalStart");
+                    //localStorage.setItem(data.destination, "globalDest");
+
 
                 },
                 error: function (e) {

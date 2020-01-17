@@ -33,7 +33,7 @@ public class RideController {
         String name = authentication.getName();
         return ridesService.saveRide(rideFormDto, name);
     }
-    //TODO make one page for ride handling, remove cookies and send variables through js files
+    // TODO make one page for ride handling, remove cookies and send variables through js files
 
 
     @GetMapping("/rides/all")

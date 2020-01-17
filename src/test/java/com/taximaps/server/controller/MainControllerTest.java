@@ -1,8 +1,8 @@
 package com.taximaps.server.controller;
 
-import com.taximaps.server.config.TestAppConfig;
 import com.taximaps.server.controller.web.MainController;
 import com.taximaps.server.entity.User;
+import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.repository.CarRepository;
 import com.taximaps.server.repository.RidesRepository;
 import com.taximaps.server.repository.UserRepository;
@@ -15,12 +15,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -28,18 +27,17 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = MainController.class)
+@DirtiesContext
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = TestAppConfig.class)
+@SpringBootTest
 @AutoConfigureMockMvc
-@WebAppConfiguration
 public class MainControllerTest {
     //1111
     private static final String user_password_hashed = "$2a$08$zR2XQakN5rDX4RCFoy8c/ec90VxKrGjHJ4cIoND5ceBhqEmtqIuKy";
@@ -60,6 +58,9 @@ public class MainControllerTest {
 
     @MockBean
     private CarRepository carRepository;
+
+    @MockBean
+    private LocationMapper locationMapper;
 
     @MockBean
     private UserRepository userRepository;

@@ -9,5 +9,4 @@ public interface LocationMapper {
     String toStringLocation(double lat, double lng) throws InterruptedException, ApiException, IOException;
     String toAddressLocation(double lat, double lng) throws InterruptedException, ApiException, IOException;
     Location fromCoordsToLocation(String location) throws InterruptedException, ApiException, IOException;
-    Location fromAddressToLocation(String location) throws InterruptedException, ApiException, IOException;
 }

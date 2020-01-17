@@ -32,7 +32,7 @@ var foundCar = {};
 function getCars() {
     $.ajax({
         type: "GET",
-        url: "/cars/all",
+        url: "/cars/free",
         headers:
             {
                 'Content-Type': 'application/json;charset=UTF-8'
@@ -71,7 +71,7 @@ function getCars() {
 function updatePositionCars() {
     $.ajax({
         type: "GET",
-        url: "/cars/all",
+        url: "/cars/free",
         headers:
             {
                 'Content-Type': 'application/json;charset=UTF-8'
@@ -113,22 +113,22 @@ setTimeout(() => getCars(), 2000);
 
 setInterval(() => updatePositionCars(), 1000);
 
-$(document.getElementById('foundCarCoords')).ready( function(){
-
-    var foundCarIndex = document.getElementById("foundCarCoords").innerText;
-        if(markerGlobal[foundCarIndex] != undefined){
-            markerGlobal[foundCarIndex].getAnimation();
-            console.log('found right car');
-        }else{
-            console.log('cannot find right car');
-        }
-})
+//$(document.getElementById('foundCarCoords')).ready( function(){
+//
+//    var foundCarIndex = document.getElementById("foundCarCoords").innerText;
+//        if(markerGlobal[foundCarIndex] != undefined){
+//            markerGlobal[foundCarIndex].getAnimation();
+//            console.log('found right car');
+//        }else{
+//            console.log('cannot find right car');
+//        }
+//})
 
 
 function getAllCars(data, suc) {
     $.ajax({
         type: "GET",
-        url: "/cars/all",
+        url: "/cars/free",
         data: data,
         headers:
             {
@@ -182,6 +182,14 @@ function triggerTodo(id, suc) {
 
 function getFoundCarCoords() {
     return $("#foundCarCoords").val();
+}
+
+function hideRideCreatorForm() {
+    $("input-form").addClass("d-none");
+}
+
+function showRideCreatorForm() {
+    $("").removeClass("d-none");
 }
 
 function showEditor() {

@@ -21,6 +21,11 @@ public class Car extends AbstractEntity{
     private CarStatus carStatus;
     @Enumerated(EnumType.STRING)
     private CarType carType = com.taximaps.server.entity.CarType.ORDINARY;
+    @OneToOne
+    @JoinTable(name = "car_driver",
+            joinColumns = {@JoinColumn(name = "car_id")},
+            inverseJoinColumns = {@JoinColumn(name = "driver_id")})
+    private User driver;
 
     public Car(Long id, String name, Location location, CarStatus carStatus, CarType carType){
         super(id);
