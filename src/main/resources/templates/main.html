@@ -152,7 +152,8 @@
     var carsInfo = document.getElementById("carsInfo");
     var readyCars = cars.split(" ");
     var map;
-
+    var directionsService;
+    var directionsRenderer;
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 49.2331, lng: 28.4682},
@@ -163,6 +164,10 @@
         var dest = document.getElementById('pac-dest');
         var types = document.getElementById('type-selector');
         var strictBounds = document.getElementById('strict-bounds-selector');
+         directionsService = new google.maps.DirectionsService();
+         directionsRenderer = new google.maps.DirectionsRenderer();
+
+        directionsRenderer.setMap(map);
 
         map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
 

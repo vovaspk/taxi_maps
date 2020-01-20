@@ -47,6 +47,7 @@ $(document).ready(
                 success: function (res) {
                     hideRideCreatorForm();
                     showRideResult(res);
+                    drawRoute(directionsService, directionsRenderer)
                     //setCookie('start', data.origin, 1);
                     //setCookie('dest', data.destination, 1);
                     //window.location.href = '/processInput';
@@ -67,6 +68,30 @@ $(document).ready(
         });
 
     });
+
+    function drawRoute(directionsService, directionsRenderer){
+
+            console.log('goes to here 2');
+
+            directionsService.route(
+                {
+                    origin: {query: globalStart},
+                    destination: {query: globalDest},
+                    travelMode: 'DRIVING'
+                },
+                function(response, status) {
+                    if (status === 'OK') {
+                        console.log('goes to here 3');
+                        directionsRenderer.setDirections(response);
+
+                    } else {
+                        console.log('goes to here fail');
+                        window.alert('Directions request failed due to ' + status);
+                    }
+                });
+
+
+    }
 
     function setCookie(cname, cvalue, exdays) {
       var d = new Date();
