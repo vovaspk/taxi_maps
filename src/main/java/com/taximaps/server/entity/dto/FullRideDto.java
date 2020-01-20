@@ -10,8 +10,8 @@ import java.util.Date;
 
 @Data
 public class FullRideDto {
-    private Time rideTime;
-    private Date rideDate;
+    private String rideTime;
+    private String rideDate;
     private Location startPoint;
     private Location destination;
     private Car car;

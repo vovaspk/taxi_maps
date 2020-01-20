@@ -2,6 +2,7 @@ package com.taximaps.server.mapper;
 
 import com.google.maps.errors.ApiException;
 import com.taximaps.server.entity.RideEntity;
+import com.taximaps.server.entity.dto.FullRideDto;
 import com.taximaps.server.entity.dto.RideFormDto;
 
 import java.io.IOException;
@@ -12,4 +13,5 @@ public interface RideMapper {
     RideFormDto toRideDto (RideEntity rideEntity);
     List<RideFormDto> toRideDtos (List<RideEntity> rideEntities);
     List<RideEntity> toRideEntites (List<RideFormDto> rideFormDtos);
+    FullRideDto toFullRideDto (RideEntity ride);
 }

@@ -5,6 +5,7 @@ import com.taximaps.server.entity.Car;
 import com.taximaps.server.entity.CarType;
 import com.taximaps.server.entity.RideEntity;
 import com.taximaps.server.entity.User;
+import com.taximaps.server.entity.dto.FullRideDto;
 import com.taximaps.server.entity.dto.RideFormDto;
 import com.taximaps.server.entity.status.RideStatus;
 import com.taximaps.server.mapper.LocationMapper;
@@ -74,5 +75,18 @@ public class RideMapperImpl implements RideMapper {
             return null;
         }).collect(Collectors.toList());
         return rideEntityList;
+    }
+
+    @Override
+    public FullRideDto toFullRideDto(RideEntity ride) {
+        FullRideDto fullRideDto = new FullRideDto();
+        fullRideDto.setRideTime(ride.getRideTime().toString());
+        fullRideDto.setRideDate(ride.getRideDate().toString());
+        fullRideDto.setStartPoint(ride.getStartPoint());
+        fullRideDto.setDestination(ride.getDestination());
+        fullRideDto.setCar(ride.getCar());
+        fullRideDto.setStatus(ride.getStatus());
+        fullRideDto.setPrice(ride.getPrice());
+        return fullRideDto;
     }
 }

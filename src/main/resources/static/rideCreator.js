@@ -44,11 +44,12 @@ $(document).ready(
                 data: JSON.stringify(data),
                 dataType: 'json',
                 //timeout: 600000,
-                success: function (data) {
-
-                    setCookie('start', data.origin, 1);
-                    setCookie('dest', data.destination, 1);
-                    window.location.href = '/processInput';
+                success: function (res) {
+                    hideRideCreatorForm();
+                    showRideResult(res);
+                    //setCookie('start', data.origin, 1);
+                    //setCookie('dest', data.destination, 1);
+                    //window.location.href = '/processInput';
 
                     //localStorage.setItem(data.start, "globalStart");
                     //localStorage.setItem(data.destination, "globalDest");
@@ -88,6 +89,30 @@ $(document).ready(
         }
       }
       return "";
+    }
+
+    function showRideResult(data){
+         $("#rideTime").val(data.rideTime);
+         $("#rideData").val(data.rideDate);
+         $("#car").val(data.car);
+         $("#price").val(data.price);
+    }
+
+
+    function hideRideCreatorForm() {
+        $("#input-form").addClass("d-none");
+    }
+
+    function showRideCreatorForm() {
+        $("#input-form").removeClass("d-none");
+    }
+
+    function hideInfoRide() {
+            $("infoRide").addClass("d-none");
+        }
+
+    function showInfoRide() {
+        $("infoRide").removeClass("d-none");
     }
 
 // function createRide(data) {

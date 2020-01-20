@@ -74,16 +74,16 @@ public class MainController {
         //TODO add time
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyy", Locale.ENGLISH);
 
-        ridesService.save(RideEntity.builder()
-                .startPoint(locationMapper.fromCoordsToLocation(origin))
-        .destination(locationMapper.fromCoordsToLocation(destination))
-        .price(price)
-        .user(user)
-        .car(foundCar)
-        .rideDate(formatter.parse(date))
-        .rideTime(Time.valueOf(LocalTime.now()))
-        .status(RideStatus.NEW_RIDE)
-        .build());
+//        ridesService.save(RideEntity.builder()
+//                .startPoint(locationMapper.fromCoordsToLocation(origin))
+//        .destination(locationMapper.fromCoordsToLocation(destination))
+//        .price(price)
+//        .user(user)
+//        .car(foundCar)
+//        .rideDate(formatter.parse(date))
+//        .rideTime(Time.valueOf(LocalTime.now()))
+//        .status(RideStatus.NEW_RIDE)
+//        .build());
 
         return PagesConstants.RESPONSE_PAGE;
 

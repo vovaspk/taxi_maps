@@ -3,6 +3,7 @@ package com.taximaps.server.service.impl;
 import com.google.maps.errors.ApiException;
 import com.taximaps.server.entity.CarType;
 import com.taximaps.server.entity.RideEntity;
+import com.taximaps.server.entity.dto.FullRideDto;
 import com.taximaps.server.entity.dto.RideFormDto;
 import com.taximaps.server.entity.status.RideStatus;
 import com.taximaps.server.mapper.LocationMapper;
@@ -47,40 +48,17 @@ public class RidesServiceImpl implements RidesService {
     }
 
     @Override
-    public boolean save(RideEntity rideEntity) {
-        ridesRepository.save(rideEntity);
-        carService.setCarOnWay(rideEntity.getCar(), rideEntity.getStartPoint().getAddress());
-        rideEntity.setStatus(RideStatus.RIDE_ASSIGNED_TO_DRIVER);
-        //make maybe another timer for car to ride to passanger
-
-        new Timer().schedule(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-
-                        carService.setCarFree(rideEntity.getCar());
-                        carService.changeCarLocation(rideEntity.getCar(), rideEntity.getDestination());
-                        rideEntity.setStatus(RideStatus.RIDE_ENDED);
-
-                    }
-                },
-                15000
-                //ride.getRideTime().getTime()
-        );
-        long tm = rideEntity.getRideTime().getTime();
-        return true;
-    }
-
-    @Override
-    public RideFormDto saveRide(RideFormDto rideFormDto, String userName) throws InterruptedException, ApiException, IOException {
+    public FullRideDto saveRide(RideFormDto rideFormDto, String userName) throws InterruptedException, ApiException, IOException {
         rideFormDto.setCarType(rideFormDto.getCarType().toUpperCase());
+        //TODO make class to return price and distance to reuse distance for time of ride
         double price = this.roundPrice(rideFormDto);
         String timeOfRide = this.calculateTimeOfRide(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType()));
 
         RideEntity ride = rideMapper.toRideEntity(rideFormDto, userName);
         ride.setPrice(price);
-       //TODO think where to put time of ride
         ridesRepository.save(ride);
+
+        FullRideDto fullRideDto = rideMapper.toFullRideDto(ride);
 
         carService.setCarOnWay(ride.getCar(), ride.getStartPoint().getAddress());
         updateRideStatus(RideStatus.RIDE_ASSIGNED_TO_DRIVER, ride.getId());
@@ -103,7 +81,7 @@ public class RidesServiceImpl implements RidesService {
                 },
                 15000
         );
-        return rideFormDto;
+        return fullRideDto;
 
     }
 
@@ -148,8 +126,8 @@ public class RidesServiceImpl implements RidesService {
     }
 
     @Override
-    public String calculateTimeFromDriverToPassanger(String passangerLocation, String driverLocation, CarType carType) throws InterruptedException, ApiException, IOException {
-        return JsonReader.getDriveTime(driverLocation, passangerLocation);
+    public String calculateTimeFromDriverToPassenger(String passengerLocation, String driverLocation, CarType carType) throws InterruptedException, ApiException, IOException {
+        return JsonReader.getDriveTime(driverLocation, passengerLocation);
     }
 
 

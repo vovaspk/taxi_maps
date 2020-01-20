@@ -3,6 +3,7 @@ package com.taximaps.server.controller.rest;
 import com.google.maps.errors.ApiException;
 import com.taximaps.server.entity.RideEntity;
 import com.taximaps.server.entity.User;
+import com.taximaps.server.entity.dto.FullRideDto;
 import com.taximaps.server.entity.dto.RideFormDto;
 import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.service.RidesService;
@@ -29,7 +30,7 @@ public class RideController {
     private RidesService ridesService;
 
     @PostMapping(value = "/rides", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public RideFormDto createRide(@RequestBody RideFormDto rideFormDto, Authentication authentication) throws InterruptedException, ApiException, IOException {
+    public FullRideDto createRide(@RequestBody RideFormDto rideFormDto, Authentication authentication) throws InterruptedException, ApiException, IOException {
         String name = authentication.getName();
         return ridesService.saveRide(rideFormDto, name);
     }
