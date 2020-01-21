@@ -117,10 +117,14 @@ $(document).ready(
     }
 
     function showRideResult(data){
-         $("#rideTime").val(data.rideTime);
-         $("#rideData").val(data.rideDate);
-         $("#car").val(data.car);
-         $("#price").val(data.price);
+         console.log(data.rideTime);
+         console.log(data.rideDate);
+         console.log(data.car);
+         console.log(data.price);
+         $('#rideTime').text(data.rideTime);
+         $('#rideData').text(data.rideDate);
+         $('#car').text(data.car);
+         $('#price').text(data.price);
     }
 
 
