@@ -121,7 +121,7 @@ $(document).ready(
          console.log(data.rideDate);
          console.log(data.car);
          console.log(data.price);
-         $('#rideTime').text(data.rideTime);
+         $('#rideTime').text("" + data.rideTime);
          $('#rideData').text(data.rideDate);
          $('#car').text(data.car);
          $('#price').text(data.price);

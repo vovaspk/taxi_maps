@@ -1,6 +1,5 @@
 package com.taximaps.server.controller.rest;
 
-import com.google.maps.errors.ApiException;
 import com.taximaps.server.entity.Car;
 import com.taximaps.server.entity.dto.FindCarDto;
 import com.taximaps.server.entity.status.CarStatus;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -26,7 +24,7 @@ public class CarController {
     }
 
     @GetMapping("/cars/find")
-    public Car findNearestCarToLocation(@RequestBody FindCarDto findCarDto) throws InterruptedException, ApiException, IOException {
+    public Car findNearestCarToLocation(@RequestBody FindCarDto findCarDto)  {
         return carService.findNearestCarToLocationAndType(findCarDto.getAddress(), findCarDto.getCarType());
     }
 

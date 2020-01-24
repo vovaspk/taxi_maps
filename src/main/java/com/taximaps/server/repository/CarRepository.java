@@ -17,5 +17,4 @@ public interface CarRepository extends JpaRepository<Car,Long> {
     Integer countAllByCarStatus(CarStatus carStatus);
     @Query(value = "select c.id as id, c.name as name, l.address as address from car as c join location as l on c.location_id = l.id", nativeQuery = true)
     List<ICarInfo> getAllCarsInfo();
-    //Car findNearestCarToLocation(String location);
 }

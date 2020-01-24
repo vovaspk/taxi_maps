@@ -1,5 +1,8 @@
 package com.taximaps.server.utils.pages;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class PagesConstants {
     public static final String LOGIN_PAGE = "login";
     public static final String RESPONSE_PAGE = "response";

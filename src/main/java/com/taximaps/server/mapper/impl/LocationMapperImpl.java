@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.List;
 
-import static com.taximaps.server.maps.JsonReader.getGeocodeCoordinats;
+import static com.taximaps.server.maps.JsonReader.getGeocodeCoordinates;
 
 @Component
 @AllArgsConstructor
@@ -36,14 +36,13 @@ public class LocationMapperImpl implements LocationMapper {
 
     //check if coords already exists in db then get from db end return it
     @Override
-    public Location fromCoordsToLocation(String coords) throws InterruptedException, ApiException, IOException {
+    public Location fromCoordsToLocation(String coords) {
         List<Location> availableLocations = locationRepository.findAll();
 
-        String convertedLocation = getGeocodeCoordinats(coords);
+        String convertedLocation = getGeocodeCoordinates(coords);
 
         String lat = convertedLocation.split(",")[0];
         String lng = convertedLocation.split(",")[1];
-        //String address = toAddressLocation(Double.parseDouble(lat), Double.parseDouble(lng));
 
         Location locationIfFound = new Location();
         for(Location location : availableLocations){
@@ -59,7 +58,7 @@ public class LocationMapperImpl implements LocationMapper {
     }
 
     private boolean isSameLocation(String coords, String lat, String lng, Location location) {
-        return location.getAddress().equalsIgnoreCase(coords) || ((location.getLat() == Double.parseDouble(lat) && location.getLng() == Double.parseDouble(lng)));
+        return location.getAddress().equalsIgnoreCase(coords) || (location.getLat() == Double.parseDouble(lat) && location.getLng() == Double.parseDouble(lng));
     }
 
 }

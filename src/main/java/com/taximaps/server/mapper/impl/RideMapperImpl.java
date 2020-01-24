@@ -21,6 +21,8 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.taximaps.server.entity.RideEntity.*;
+
 @Component
 @AllArgsConstructor
 public class RideMapperImpl implements RideMapper {
@@ -36,7 +38,7 @@ public class RideMapperImpl implements RideMapper {
         Car foundCar = carService.findNearestCarToLocationAndType(rideFormDto.getOrigin(), CarType.valueOf(rideFormDto.getCarType()));
 
 
-        RideEntity rideEntity = RideEntity.builder()
+        return builder()
                 .rideTime(Time.valueOf(LocalTime.now()))
                 .rideDate(rideFormDto.getDate())
                 .user(user)
@@ -45,7 +47,6 @@ public class RideMapperImpl implements RideMapper {
                 .car(foundCar)
                 .status(RideStatus.NEW_RIDE)
                 .build();
-        return rideEntity;
     }
 
     @Override
@@ -60,21 +61,7 @@ public class RideMapperImpl implements RideMapper {
 
     @Override
     public List<RideFormDto> toRideDtos(List<RideEntity> rideEntities) {
-        List<RideFormDto> rideFormDtos = rideEntities.stream().map(this::toRideDto).collect(Collectors.toList());
-        return rideFormDtos;
-    }
-
-    @Override
-    public List<RideEntity> toRideEntites(List<RideFormDto> rideFormDtos) {
-        List<RideEntity> rideEntityList = rideFormDtos.stream().map(rideFormDto -> {
-            try {
-                return toRideEntity(rideFormDto, "mocked user");
-            } catch (InterruptedException | ApiException | IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }).collect(Collectors.toList());
-        return rideEntityList;
+       return rideEntities.stream().map(this::toRideDto).collect(Collectors.toList());
     }
 
     @Override

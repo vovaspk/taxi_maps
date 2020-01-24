@@ -1,22 +1,24 @@
 package com.taximaps.server.service.impl;
 
-import com.google.maps.errors.ApiException;
 import com.taximaps.server.entity.Car;
 import com.taximaps.server.entity.CarType;
 import com.taximaps.server.entity.Location;
 import com.taximaps.server.entity.User;
+import com.taximaps.server.entity.dto.CarDto;
 import com.taximaps.server.entity.status.CarStatus;
+import com.taximaps.server.mapper.CarMapper;
 import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.repository.CarRepository;
 import com.taximaps.server.repository.UserRepository;
 import com.taximaps.server.service.CarService;
-import com.taximaps.server.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -26,17 +28,11 @@ public class CarServiceImpl implements CarService {
     private CarRepository carRepository;
     private LocationMapper locationMapper;
     private UserRepository userRepository;
+    private CarMapper carMapper;
 
     @Override
     public List<Car> findAll() {
         return carRepository.findAll();
-    }
-
-    @Override
-    public List<String> getCarsInfo() {
-        List<String> carsInfo = new ArrayList<>();
-
-        return carsInfo;
     }
 
     @Override
@@ -45,7 +41,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Car findNearestCarToLocationAndType(String location, CarType carType) throws InterruptedException, ApiException, IOException {
+    public Car findNearestCarToLocationAndType(String location, CarType carType) {
         Location givenLocation = locationMapper.fromCoordsToLocation(location);
         List<Car> availableCars = carRepository.findCarsByCarStatusAndCarType(CarStatus.FREE, carType);
 
@@ -56,12 +52,6 @@ public class CarServiceImpl implements CarService {
 
         Car foundCar = Collections.min(carDoubleMap.entrySet(), Map.Entry.comparingByValue()).getKey();
         log.info("found nearest car to location: {}", foundCar.getLocation().getAddress());
-        System.out.println("found nearest car to location: " + foundCar.getLocation().getAddress());
-//        return availableCars
-//                .stream()
-//                .sorted()
-//                .min((car1, car2) -> getDistance(givenLocation, car1))
-//                .get();
         return foundCar;
     }
 
@@ -78,7 +68,6 @@ public class CarServiceImpl implements CarService {
         car.setCarStatus(CarStatus.ONWAY);
         carRepository.save(car);
         log.info("car {} is on way to: {}", car.getName(), address);
-        System.out.println("car " + car.getName() + " is on way to: " + address);
     }
 
     @Override
@@ -86,12 +75,12 @@ public class CarServiceImpl implements CarService {
         car.setCarStatus(CarStatus.RIDING);
         carRepository.save(car);
         log.info("car {} is riding: ", car.getName());
-        System.out.println("car " + car.getName() + " is riding");
     }
 
     @Override
-    public Car registerNewCar(Car car) {
-        return carRepository.save(car);
+    public Car registerNewCar(CarDto car) {
+        Car carToSave = carMapper.toCarEntity(car);
+        return carRepository.save(carToSave);
     }
 
     @Override
@@ -99,7 +88,6 @@ public class CarServiceImpl implements CarService {
         car.setLocation(location);
         carRepository.save(car);
         log.info("car is now here: {}", car.getLocation().getAddress());
-        System.out.println("car " + car.getName() + " is now here: " + car.getLocation().getAddress());
     }
 
     @Override

@@ -11,6 +11,8 @@ import javax.persistence.*;
 import java.sql.Time;
 import java.util.Date;
 
+import static org.hibernate.annotations.CascadeType.*;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -20,12 +22,12 @@ import java.util.Date;
 public class RideEntity extends AbstractEntity{
     private Time rideTime;
     private Date rideDate;
-    @ManyToOne(/*cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}*/)
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @ManyToOne
+    @Cascade(SAVE_UPDATE)
     @JoinColumn(name = "start_location_id")
     private Location startPoint;
-    @ManyToOne(/*cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}*/)
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @ManyToOne
+    @Cascade(SAVE_UPDATE)
     @JoinColumn(name = "dest_location_id")
     private Location destination;
     @OneToOne
@@ -37,17 +39,6 @@ public class RideEntity extends AbstractEntity{
     @Enumerated(value = EnumType.STRING)
     private RideStatus status;
     private double price;
+    private int rating;
 
-    public RideEntity(Long id, Time rideTime, Date rideDate, Location startPoint, Location destination,
-                      Car car, User user, RideStatus status, double price) {
-        super(id);
-        this.rideTime = rideTime;
-        this.rideDate = rideDate;
-        this.startPoint = startPoint;
-        this.destination = destination;
-        this.car = car;
-        this.user = user;
-        this.status = status;
-        this.price = price;
-    }
 }

@@ -1,6 +1,7 @@
 package com.taximaps.server.controller.admin.rest;
 
 import com.taximaps.server.entity.Car;
+import com.taximaps.server.entity.dto.CarDto;
 import com.taximaps.server.service.CarService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,7 +15,7 @@ public class AdminController {
     private CarService carService;
 
     @PostMapping("/admin")
-    public Car addCar(Car car){
+    public Car addCar(CarDto car) {
         return carService.registerNewCar(car);
     }
 

@@ -5,7 +5,6 @@ import com.taximaps.server.entity.RideEntity;
 import com.taximaps.server.entity.User;
 import com.taximaps.server.entity.dto.FullRideDto;
 import com.taximaps.server.entity.dto.RideFormDto;
-import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.service.RidesService;
 import com.taximaps.server.service.UserService;
 import lombok.AllArgsConstructor;
@@ -40,17 +39,13 @@ public class RideController {
     @GetMapping("/rides/all")
     public List<RideEntity> getRidesList(HttpServletRequest req) {
         User user = getUser(req);
-        List<RideEntity> userRideEntities = ridesService.findRidesByUserId(user.getId());
+        return ridesService.findRidesByUserId(user.getId());
 
-        return userRideEntities;
     }
 
     @GetMapping("/rides/{id}")
     public RideEntity getRide(Model model, @PathVariable Long id) {
-        RideEntity rideEntity = ridesService.findRideById(id);
-
-        return rideEntity;
-
+        return ridesService.findRideById(id);
     }
 
     private User getUser(HttpServletRequest req) {

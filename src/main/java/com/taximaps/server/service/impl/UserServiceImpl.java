@@ -1,13 +1,13 @@
 package com.taximaps.server.service.impl;
 
+import com.taximaps.server.entity.Role;
+import com.taximaps.server.entity.User;
 import com.taximaps.server.entity.dto.UserDto;
 import com.taximaps.server.mapper.UserMapper;
 import com.taximaps.server.repository.UserRepository;
-import com.taximaps.server.entity.Role;
-import com.taximaps.server.entity.User;
 import com.taximaps.server.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,6 +19,7 @@ import java.util.Collections;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserDetailsService, UserService {
 
     private UserRepository userRepository;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private UserMapper userMapper;
 
     public boolean addUser(User user){
-        User userFromDB = userRepository.findByUserName(user.getUserName());
+        User userFromDB = userRepository.findByUserName(user.getUsername());
 
         if(userFromDB != null){
             return false;
@@ -57,11 +58,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User userFromDb = userRepository.findByUserName(username);
 
         if(userFromDb != null){
-            userFromDb.setUserName(user.getUserName());
+            userFromDb.setUserName(user.getUsername());
             userFromDb.setEmail(user.getEmail());
             //crypt password
             userFromDb.setPassword(passwordEncoder.encode(user.getPassword()));
-            System.out.println("updating user: " + user.getEmail());
+            log.info("updating user: {}", user.getEmail());
             userRepository.save(userFromDb);
         }
 
@@ -71,6 +72,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public UserDto getUserProfile(String name) {
         User user = userRepository.findByUserName(name);
         return userMapper.toUserDto(user);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findUserById(id);
     }
 
 

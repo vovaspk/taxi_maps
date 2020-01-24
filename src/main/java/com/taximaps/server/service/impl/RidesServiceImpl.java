@@ -6,11 +6,9 @@ import com.taximaps.server.entity.RideEntity;
 import com.taximaps.server.entity.dto.FullRideDto;
 import com.taximaps.server.entity.dto.RideFormDto;
 import com.taximaps.server.entity.status.RideStatus;
-import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.mapper.RideMapper;
 import com.taximaps.server.maps.JsonReader;
 import com.taximaps.server.repository.RidesRepository;
-import com.taximaps.server.repository.UserRepository;
 import com.taximaps.server.service.CarService;
 import com.taximaps.server.service.RidesService;
 import lombok.AllArgsConstructor;
@@ -32,7 +30,7 @@ public class RidesServiceImpl implements RidesService {
     private CarService carService;
     private RideMapper rideMapper;
 
-    private static final double priceFor1KM = 11;
+    private static final double PRICE_FOR_1_KM = 11;
 
     public List<RideEntity> findAll() {
         return ridesRepository.findAll();
@@ -51,6 +49,7 @@ public class RidesServiceImpl implements RidesService {
     public FullRideDto saveRide(RideFormDto rideFormDto, String userName) throws InterruptedException, ApiException, IOException {
         rideFormDto.setCarType(rideFormDto.getCarType().toUpperCase());
         //TODO make class to return price and distance to reuse distance for time of ride
+        //TODO startTime, finishTime, rideTime, rating(1-5)
         double price = this.roundPrice(rideFormDto);
         String timeOfRide = this.calculateTimeOfRide(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType()));
 
@@ -58,18 +57,18 @@ public class RidesServiceImpl implements RidesService {
         ride.setPrice(price);
         ridesRepository.save(ride);
 
-        FullRideDto fullRideDto = rideMapper.toFullRideDto(ride);
 
         carService.setCarOnWay(ride.getCar(), ride.getStartPoint().getAddress());
         updateRideStatus(RideStatus.RIDE_ASSIGNED_TO_DRIVER, ride.getId());
-        //time for car to ride to passenger
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                updateRideStatus(RideStatus.RIDE_STARTED, ride.getId());
-            }
-        }, 15000);
 
+        startRide(ride);
+        endRide(ride);
+
+        return rideMapper.toFullRideDto(ride);
+
+    }
+
+    private void endRide(RideEntity ride) {
         new Timer().schedule(
                 new TimerTask() {
                     @Override
@@ -81,8 +80,15 @@ public class RidesServiceImpl implements RidesService {
                 },
                 15000
         );
-        return fullRideDto;
+    }
 
+    private void startRide(RideEntity ride) {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                updateRideStatus(RideStatus.RIDE_STARTED, ride.getId());
+            }
+        }, 15000);
     }
 
     public double roundPrice(RideFormDto rideFormDto) throws InterruptedException, ApiException, IOException {
@@ -95,12 +101,19 @@ public class RidesServiceImpl implements RidesService {
         rideEntity.setStatus(status);
         ridesRepository.save(rideEntity);
     }
+    //TODO make rating menu after ride is ended button
+    @Override
+    public void updateRideRating(Long rideId, int rating) {
+        RideEntity ride = ridesRepository.findRideById(rideId);
+        ride.setRating(rating);
+        ridesRepository.save(ride);
+    }
 
     @Override
     public double calculatePrice(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException {
 
         double distance = JsonReader.getDriveDistance(origin, dest);
-        double price = (distance/1000) * priceFor1KM;
+        double price = (distance/1000) * PRICE_FOR_1_KM;
 
         switch (carType){
             case PET:
@@ -113,7 +126,7 @@ public class RidesServiceImpl implements RidesService {
                 price += 15;
                 break;
             default:
-                price = (distance/1000) * priceFor1KM;
+                price = (distance/1000) * PRICE_FOR_1_KM;
                 break;
         }
 

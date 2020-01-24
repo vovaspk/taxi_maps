@@ -24,7 +24,7 @@ public class UserMapperImpl implements UserMapper {
     @Override
     public UserProfileFormDto toUserFormDto(User user) {
         UserProfileFormDto userProfileFormDto = new UserProfileFormDto();
-        userProfileFormDto.setName(user.getUserName());
+        userProfileFormDto.setName(user.getUsername());
         userProfileFormDto.setEmail(user.getEmail());
         userProfileFormDto.setPassword(user.getPassword());
         return userProfileFormDto;
@@ -33,7 +33,7 @@ public class UserMapperImpl implements UserMapper {
     @Override
     public UserDto toUserDto(User user) {
         UserDto userDto = new UserDto();
-        userDto.setName(user.getUserName());
+        userDto.setName(user.getUsername());
         userDto.setEmail(user.getEmail());
         return userDto;
     }
