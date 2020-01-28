@@ -1,16 +1,18 @@
 package com.taximaps.server.controller.rest;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 public class CarControllerTest {
 
     @Test
-    public void getCars() {
+    void getFreeCars() {
     }
 
     @Test
-    public void findNearestCarToLocation() {
+    void testFindNearestCarToLocation() {
+    }
+
+    @Test
+    void getAllCars() {
     }
 }

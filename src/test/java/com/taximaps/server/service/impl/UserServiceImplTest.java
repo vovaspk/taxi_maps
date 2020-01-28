@@ -1,24 +1,91 @@
 package com.taximaps.server.service.impl;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import com.taximaps.server.entity.Role;
+import com.taximaps.server.entity.User;
+import com.taximaps.server.mapper.impl.UserMapperImpl;
+import com.taximaps.server.repository.UserRepository;
+import org.junit.Ignore;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
+
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
 
-    @Before
-    public void setUp() throws Exception {
+    private static final String USER_NAME = "userName";
+    private static final String PASSWORD = "password";
+    private static final long USER_ID = 1L;
+    private static final String EMAIL = "email";
+    private static final String ENCODED_PASSWORD = "ENCODED_PASSWORD";
+    private UserServiceImpl userService;
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @Mock
+    private UserMapperImpl userMapper;
+
+    @BeforeEach
+    public void setUp() {
+        userService = new UserServiceImpl(userRepository, passwordEncoder, userMapper);
     }
 
-    @After
-    public void tearDown() throws Exception {
+
+    @Test
+    void testAddUser() {
+        User registeredUser = getUser();
+        User notRegisteredUser = null;
+        when(userRepository.findByUserName(USER_NAME)).thenReturn(notRegisteredUser);
+        when(passwordEncoder.encode(registeredUser.getPassword())).thenReturn(ENCODED_PASSWORD);
+        userService.addUser(registeredUser);
+        verify(userRepository).save(registeredUser);
     }
 
     @Test
-    public void addUser() {
+    void testLoadUserByUsername() {
+        when(userRepository.findByUserName(USER_NAME)).thenReturn(getUser());
+        UserDetails userDetails = userService.loadUserByUsername(USER_NAME);
+        Assertions.assertNotNull(userDetails);
     }
 
     @Test
-    public void loadUserByUsername() {
+    void save() {
+//        User user = getUser();
+//        when(userRepository.findByUserName(USER_NAME)).thenReturn(user);
+//        userService.updateUser(user);
+//        verify(userRepository).save(user);
+    }
+
+    @Test
+    void testGetUserProfile() {
+        when(userRepository.findByUserName(USER_NAME)).thenReturn(getUser());
+        userService.getUserProfile(USER_NAME);
+    }
+
+    @Test
+    void testGetUserById() {
+        userService.getUserById(USER_ID);
+        verify(userRepository).findUserById(USER_ID);
+    }
+
+    private User getUser() {
+        User user = new User();
+        user.setId(USER_ID);
+        user.setEmail(EMAIL);
+        user.setUserName(USER_NAME);
+        user.setPassword(PASSWORD);
+        user.setActive(true);
+        user.setRoles(Collections.singleton(Role.USER));
+        return user;
     }
 }

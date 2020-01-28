@@ -104,18 +104,23 @@ class CarServiceImplTest {
 
     @Test
     void registerNewCar() {
-        CarDto carDto = new CarDto();
-        carDto.setName(CAR.getName());
-        carDto.setLocation(CAR.getLocation().getAddress());
-        carDto.setCarStatus(CAR.getCarStatus());
-        carDto.setCarType(CAR.getCarType());
-        carDto.setDriverId(CAR.getDriver().getId());
+        CarDto carDto = getCarDto();
 
         when(carMapper.toCarEntity(carDto)).thenReturn(CAR);
 
         carService.registerNewCar(carDto);
 
         verify(carRepository).save(CAR);
+    }
+
+    private CarDto getCarDto() {
+        CarDto carDto = new CarDto();
+        carDto.setName(CAR.getName());
+        carDto.setLocation(CAR.getLocation().getAddress());
+        carDto.setCarStatus(CAR.getCarStatus());
+        carDto.setCarType(CAR.getCarType());
+        carDto.setDriverId(CAR.getDriver().getId());
+        return carDto;
     }
 
     @Test

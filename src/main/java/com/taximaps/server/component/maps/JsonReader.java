@@ -1,4 +1,4 @@
-package com.taximaps.server.maps;
+package com.taximaps.server.component.maps;
 
 import com.google.maps.DirectionsApi;
 import com.google.maps.DistanceMatrixApi;

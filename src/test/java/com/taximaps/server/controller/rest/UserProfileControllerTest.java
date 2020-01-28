@@ -1,17 +1,16 @@
 package com.taximaps.server.controller.rest;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 public class UserProfileControllerTest {
 
 
+
     @Test
-    public void update() {
+    void testUpdate() {
     }
 
     @Test
-    public void getUserProfile() {
+    void testGetUserProfile() {
     }
 }

@@ -34,6 +34,7 @@ public class RideMapperImpl implements RideMapper {
 
     @Override
     public RideEntity toRideEntity(RideFormDto rideFormDto, String userName) throws InterruptedException, ApiException, IOException {
+
         User user = userRepository.findByUserName(userName);
         Car foundCar = carService.findNearestCarToLocationAndType(rideFormDto.getOrigin(), CarType.valueOf(rideFormDto.getCarType()));
 

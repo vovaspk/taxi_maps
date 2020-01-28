@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public void save(User user) {
+    public void updateUser(User user) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((UserDetails) principal).getUsername();
         User userFromDb = userRepository.findByUserName(username);

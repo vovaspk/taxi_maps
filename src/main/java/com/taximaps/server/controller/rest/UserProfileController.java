@@ -20,7 +20,7 @@ public class UserProfileController {
 
     @PostMapping("/update")
     public void update(UserProfileFormDto userProfileFormDto){
-        userService.save(userMapper.toUserEntity(userProfileFormDto));
+        userService.updateUser(userMapper.toUserEntity(userProfileFormDto));
 
     }
 

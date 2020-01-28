@@ -1,13 +1,13 @@
 package com.taximaps.server.service.impl;
 
 import com.google.maps.errors.ApiException;
+import com.taximaps.server.component.maps.MapsApiFacade;
 import com.taximaps.server.entity.CarType;
 import com.taximaps.server.entity.RideEntity;
 import com.taximaps.server.entity.dto.FullRideDto;
 import com.taximaps.server.entity.dto.RideFormDto;
 import com.taximaps.server.entity.status.RideStatus;
 import com.taximaps.server.mapper.RideMapper;
-import com.taximaps.server.maps.JsonReader;
 import com.taximaps.server.repository.RidesRepository;
 import com.taximaps.server.service.CarService;
 import com.taximaps.server.service.RidesService;
@@ -26,11 +26,19 @@ import java.util.TimerTask;
 @Slf4j
 public class RidesServiceImpl implements RidesService {
 
+    private static final int SCALE = 2;
+    private static final int DELAY = 15000;
+    private static final int PET_PRICE = 10;
+    private static final int LUXURY_PRICE = 25;
+    private static final int GROUP_PRICE = 15;
+    private static final int KM1 = 1000;
+    private static final double PRICE_FOR_1_KM = 11;
+
     private RidesRepository ridesRepository;
     private CarService carService;
     private RideMapper rideMapper;
+    private MapsApiFacade mapsApiFacade;
 
-    private static final double PRICE_FOR_1_KM = 11;
 
     public List<RideEntity> findAll() {
         return ridesRepository.findAll();
@@ -47,11 +55,12 @@ public class RidesServiceImpl implements RidesService {
 
     @Override
     public FullRideDto saveRide(RideFormDto rideFormDto, String userName) throws InterruptedException, ApiException, IOException {
+        validateRideFormDto(rideFormDto);
         rideFormDto.setCarType(rideFormDto.getCarType().toUpperCase());
         //TODO make class to return price and distance to reuse distance for time of ride
         //TODO startTime, finishTime, rideTime, rating(1-5)
         double price = this.roundPrice(rideFormDto);
-        String timeOfRide = this.calculateTimeOfRide(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType()));
+        //String timeOfRide = this.calculateTimeOfRide(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType()));
 
         RideEntity ride = rideMapper.toRideEntity(rideFormDto, userName);
         ride.setPrice(price);
@@ -68,6 +77,12 @@ public class RidesServiceImpl implements RidesService {
 
     }
 
+    private void validateRideFormDto(RideFormDto rideFormDto) {
+        if(rideFormDto.getOrigin() != null){
+
+        }
+    }
+
     private void endRide(RideEntity ride) {
         new Timer().schedule(
                 new TimerTask() {
@@ -78,7 +93,7 @@ public class RidesServiceImpl implements RidesService {
                         updateRideStatus(RideStatus.RIDE_ENDED, ride.getId());
                     }
                 },
-                15000
+                DELAY
         );
     }
 
@@ -88,11 +103,11 @@ public class RidesServiceImpl implements RidesService {
             public void run() {
                 updateRideStatus(RideStatus.RIDE_STARTED, ride.getId());
             }
-        }, 15000);
+        }, DELAY);
     }
 
     public double roundPrice(RideFormDto rideFormDto) throws InterruptedException, ApiException, IOException {
-        return Precision.round(this.calculatePrice(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType())), 2);
+        return Precision.round(this.calculatePrice(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType())), SCALE);
     }
 
     @Override
@@ -112,21 +127,21 @@ public class RidesServiceImpl implements RidesService {
     @Override
     public double calculatePrice(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException {
 
-        double distance = JsonReader.getDriveDistance(origin, dest);
-        double price = (distance/1000) * PRICE_FOR_1_KM;
+        double distance = mapsApiFacade.getDriveDistance(origin, dest);
+        double price = (distance/ KM1) * PRICE_FOR_1_KM;
 
         switch (carType){
             case PET:
-                price += 10;
+                price += PET_PRICE;
             break;
             case LUXURY:
-                price += 25;
+                price += LUXURY_PRICE;
                 break;
             case GROUP:
-                price += 15;
+                price += GROUP_PRICE;
                 break;
             default:
-                price = (distance/1000) * PRICE_FOR_1_KM;
+                price = (distance/KM1) * PRICE_FOR_1_KM;
                 break;
         }
 
@@ -135,12 +150,12 @@ public class RidesServiceImpl implements RidesService {
 
     @Override
     public String calculateTimeOfRide(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException {
-        return JsonReader.getDriveTime(origin, dest);
+        return mapsApiFacade.getDriveTime(origin, dest);
     }
 
     @Override
     public String calculateTimeFromDriverToPassenger(String passengerLocation, String driverLocation, CarType carType) throws InterruptedException, ApiException, IOException {
-        return JsonReader.getDriveTime(driverLocation, passengerLocation);
+        return mapsApiFacade.getDriveTime(driverLocation, passengerLocation);
     }
 
 

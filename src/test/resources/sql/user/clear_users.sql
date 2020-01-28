@@ -1,0 +1,1 @@
+TRUNCATE TABLE taxi_maps_test.user;

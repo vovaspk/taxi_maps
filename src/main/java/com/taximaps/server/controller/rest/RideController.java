@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -29,12 +30,10 @@ public class RideController {
     private RidesService ridesService;
 
     @PostMapping(value = "/rides", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public FullRideDto createRide(@RequestBody RideFormDto rideFormDto, Authentication authentication) throws InterruptedException, ApiException, IOException {
+    public FullRideDto createRide(@RequestBody @Valid RideFormDto rideFormDto, Authentication authentication) throws InterruptedException, ApiException, IOException {
         String name = authentication.getName();
         return ridesService.saveRide(rideFormDto, name);
     }
-    // TODO make one page for ride handling, remove cookies and send variables through js files
-
 
     @GetMapping("/rides/all")
     public List<RideEntity> getRidesList(HttpServletRequest req) {

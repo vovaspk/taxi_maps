@@ -147,12 +147,6 @@ public class MainControllerTest {
                 .andExpect(authenticated().withUsername(user_name));
 
 
-//        mockMvc.perform(get("/")
-//                .session(getUserSession(mockMvc, user_name, user_password)))
-//                .andExpect(redirectedUrl("main"))
-//                .andExpect(status().isOk());
-//               // .andExpect(view().name("/user/profile"));
-
 
     }
 

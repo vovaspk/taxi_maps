@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface UserService {
 
     boolean addUser(User user);
-    void save(User user);
+    void updateUser(User user);
     UserDetails loadUserByUsername(String s);
     UserDto getUserProfile(String name);
     User getUserById(Long id);

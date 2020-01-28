@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class LoginLogoutTest {
-    private static final String CREATE_USERS_SQL = "classpath:sql/createUsers.sql";
+    private static final String CREATE_USERS_SQL = "classpath:sql/createTableUsers.sql";
     private static final String CLEAR_DB_SQL = "classpath:sql/clearDb.sql";
     private static final String TEST_USER_EMAIL = "Vova";
     private static final String TEST_USER_PASS = "1";

@@ -127,9 +127,10 @@
         <button id="submitbtn" type="button">Book</button>
     </form>
 </div>
+
 <div id="infoRide">
-    <div id="rideTime">
-        <p id="rideTimeP"></p>
+    <div id="rideTime" class="d-none">
+        <p>Ride time:</p> <p id="rideTimeP"></p>
     </div>
     <div id="rideDate">
         <p id="rideDateP"></p>
@@ -137,13 +138,14 @@
     <div id="waitingTime">
         <p id="waitingTimeP"></p>
     </div>
-    <div id="car">
-        <p id="carP"></p>
+    <div id="car" class="d-none">
+       <p>car: </p> <p id="carP"></p>
     </div>
-    <div id="price">
-        <p id="priceP"></p>
+    <div id="price" class="d-none">
+       <p>price: </p> <p id="priceP"></p>
     </div>
 </div>
+
 <div class="pac-card" id="pac-card">
     <div id="pac-container">
 <!--        <input id="pac-input" type="text"-->
@@ -258,6 +260,7 @@
                 console.log('Checkbox clicked! New state=' + this.checked);
                 autocomplete.setOptions({strictBounds: this.checked});
             });
+
     }
     var infoWindow = new google.maps.InfoWindow;
 

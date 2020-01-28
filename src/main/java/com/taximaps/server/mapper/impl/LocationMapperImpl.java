@@ -1,9 +1,9 @@
 package com.taximaps.server.mapper.impl;
 
 import com.google.maps.errors.ApiException;
+import com.taximaps.server.component.maps.MapsApiFacade;
 import com.taximaps.server.entity.Location;
 import com.taximaps.server.mapper.LocationMapper;
-import com.taximaps.server.maps.JsonReader;
 import com.taximaps.server.repository.LocationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -11,13 +11,12 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.List;
 
-import static com.taximaps.server.maps.JsonReader.getGeocodeCoordinates;
-
 @Component
 @AllArgsConstructor
 public class LocationMapperImpl implements LocationMapper {
 
     private LocationRepository locationRepository;
+    private MapsApiFacade mapsApiFacade;
 
     @Override
     public String toStringLocation(double lat, double lng) throws InterruptedException, ApiException, IOException {
@@ -31,7 +30,7 @@ public class LocationMapperImpl implements LocationMapper {
 
     @Override
     public String toAddressLocation(double lat, double lng) throws InterruptedException, ApiException, IOException {
-        return JsonReader.getAddressLocationFromCoords(lat, lng);
+        return mapsApiFacade.getAddressLocationFromCoords(lat, lng);
     }
 
     //check if coords already exists in db then get from db end return it
@@ -39,7 +38,7 @@ public class LocationMapperImpl implements LocationMapper {
     public Location fromCoordsToLocation(String coords) {
         List<Location> availableLocations = locationRepository.findAll();
 
-        String convertedLocation = getGeocodeCoordinates(coords);
+        String convertedLocation = mapsApiFacade.getGeocodeCoordinates(coords);
 
         String lat = convertedLocation.split(",")[0];
         String lng = convertedLocation.split(",")[1];

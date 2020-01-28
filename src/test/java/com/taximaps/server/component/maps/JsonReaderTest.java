@@ -1,4 +1,4 @@
-package com.taximaps.server.maps;
+package com.taximaps.server.component.maps;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -46,6 +46,7 @@ $(document).ready(
                 //timeout: 600000,
                 success: function (res) {
                     hideRideCreatorForm();
+                    showResultDivs();
                     showRideResult(res);
                     drawRoute(directionsService, directionsRenderer)
                     //setCookie('start', data.origin, 1);
@@ -121,12 +122,48 @@ $(document).ready(
          console.log(data.rideDate);
          console.log(data.car);
          console.log(data.price);
+
          $('#rideTime').text("" + data.rideTime);
          $('#rideData').text(data.rideDate);
          $('#car').text(data.car);
          $('#price').text(data.price);
     }
 
+    function showResultDivs(){
+        showRideTime();
+        showFoundCar();
+        showPrice();
+    }
+
+    function hideResultDivs(){
+        hideRideTime();
+        hideFoundCar();
+        hidePrice();
+    }
+
+    function showRideTime(){
+        $("#rideTime").addClass("d-none");
+    }
+
+    function hideRideTime(){
+        $("#rideTime").removeClass("d-none");
+    }
+
+    function showFoundCar(){
+        $("#car").addClass("d-none");
+    }
+
+    function hideFoundCar(){
+        $("#car").removeClass("d-none");
+    }
+
+    function showPrice(){
+        $("#price").addClass("d-none");
+    }
+
+    function hidePrice(){
+        $("#price").removeClass("d-none");
+    }
 
     function hideRideCreatorForm() {
         $("#input-form").addClass("d-none");
@@ -137,8 +174,8 @@ $(document).ready(
     }
 
     function hideInfoRide() {
-            $("infoRide").addClass("d-none");
-        }
+        $("infoRide").addClass("d-none");
+    }
 
     function showInfoRide() {
         $("infoRide").removeClass("d-none");

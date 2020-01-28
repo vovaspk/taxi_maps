@@ -17,7 +17,7 @@ alter table user_role
 
 INSERT INTO user (id, user_name, email, password, active)
 VALUES
-(1, 'vova', 'vova', '$2a$08$zR2XQakN5rDX4RCFoy8c/ec90VxKrGjHJ4cIoND5ceBhqEmtqIuKy', true ),
+(1, 'vova', 'vova', '$2a$08$SEG3LpMLrSmNJ7lDHp9Yo.RqP6XOziBjQhlup74ZrIMxfkS58E7AW', true ),
 (2, 'John', 'John.P@gmail.com', '2', true);
 -- pass 1, 2
 -- INSERT INTO user_role(user_id, roles) VALUES (1, 'USER');
