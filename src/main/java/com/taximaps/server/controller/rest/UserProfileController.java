@@ -1,7 +1,7 @@
 package com.taximaps.server.controller.rest;
 
-import com.taximaps.server.entity.dto.UserDto;
-import com.taximaps.server.entity.dto.UserProfileFormDto;
+import com.taximaps.server.entity.dto.user.UserDto;
+import com.taximaps.server.entity.dto.user.UserProfileFormDto;
 import com.taximaps.server.mapper.UserMapper;
 import com.taximaps.server.service.UserService;
 import lombok.AllArgsConstructor;

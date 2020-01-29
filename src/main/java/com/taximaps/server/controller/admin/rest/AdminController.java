@@ -1,7 +1,7 @@
 package com.taximaps.server.controller.admin.rest;
 
 import com.taximaps.server.entity.Car;
-import com.taximaps.server.entity.dto.CarDto;
+import com.taximaps.server.entity.dto.car.CarDto;
 import com.taximaps.server.service.CarService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;

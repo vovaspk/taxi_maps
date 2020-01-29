@@ -1,4 +1,4 @@
-package com.taximaps.server.entity.dto;
+package com.taximaps.server.entity.dto.car;
 
 import com.taximaps.server.entity.CarType;
 import lombok.Data;

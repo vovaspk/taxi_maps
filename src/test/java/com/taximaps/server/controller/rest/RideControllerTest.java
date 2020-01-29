@@ -2,7 +2,7 @@ package com.taximaps.server.controller.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.taximaps.server.Utils;
-import com.taximaps.server.entity.dto.RideFormDto;
+import com.taximaps.server.entity.dto.ride.RideFormDto;
 import com.taximaps.server.service.RidesService;
 import io.restassured.RestAssured;
 import org.junit.Before;
@@ -85,7 +85,7 @@ public class RideControllerTest {
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
-        verify(ridesService,times(1)).saveRide(rideFormDto,USER_NAME);
+        verify(ridesService,times(1)).bookRide(rideFormDto,USER_NAME);
     }
 
 
@@ -101,7 +101,7 @@ public class RideControllerTest {
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
-        verify(ridesService, times(1)).findRidesByUserId(USER_ID);
+        verify(ridesService, times(1)).findUserRides(USER_NAME);
     }
 
     @Sql(scripts = {SQL_ADD_TEST_USER,SQL_ADD_RIDES}, executionPhase = BEFORE_TEST_METHOD)

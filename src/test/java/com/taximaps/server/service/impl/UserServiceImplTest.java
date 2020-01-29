@@ -12,10 +12,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,6 +25,7 @@ import static org.mockito.Mockito.when;
 public class UserServiceImplTest {
 
     private static final String USER_NAME = "userName";
+    private static final String WRONG_USER_NAME = "qwerty123";
     private static final String PASSWORD = "password";
     private static final long USER_ID = 1L;
     private static final String EMAIL = "email";
@@ -52,10 +55,24 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void testAddExistingUserShouldReturnFalse(){
+
+    }
+
+    @Test
+    public void updateUser(){}
+
+
+    @Test
     void testLoadUserByUsername() {
         when(userRepository.findByUserName(USER_NAME)).thenReturn(getUser());
         UserDetails userDetails = userService.loadUserByUsername(USER_NAME);
         Assertions.assertNotNull(userDetails);
+    }
+
+    @Test
+    void testLoadByInvalidUseNameShouldThrowException() {
+        assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(WRONG_USER_NAME));
     }
 
     @Test

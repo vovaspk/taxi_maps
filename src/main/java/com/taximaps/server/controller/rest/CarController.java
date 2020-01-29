@@ -1,7 +1,7 @@
 package com.taximaps.server.controller.rest;
 
 import com.taximaps.server.entity.Car;
-import com.taximaps.server.entity.dto.FindCarDto;
+import com.taximaps.server.entity.dto.car.FindCarDto;
 import com.taximaps.server.entity.status.CarStatus;
 import com.taximaps.server.service.CarService;
 import lombok.AllArgsConstructor;

@@ -3,7 +3,7 @@ package com.taximaps.server.service;
 import com.taximaps.server.entity.Car;
 import com.taximaps.server.entity.CarType;
 import com.taximaps.server.entity.Location;
-import com.taximaps.server.entity.dto.CarDto;
+import com.taximaps.server.entity.dto.car.CarDto;
 import com.taximaps.server.entity.status.CarStatus;
 
 import java.util.List;

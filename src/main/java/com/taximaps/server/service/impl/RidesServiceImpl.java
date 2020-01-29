@@ -2,13 +2,17 @@ package com.taximaps.server.service.impl;
 
 import com.google.maps.errors.ApiException;
 import com.taximaps.server.component.maps.MapsApiFacade;
+import com.taximaps.server.entity.Car;
 import com.taximaps.server.entity.CarType;
 import com.taximaps.server.entity.RideEntity;
-import com.taximaps.server.entity.dto.FullRideDto;
-import com.taximaps.server.entity.dto.RideFormDto;
+import com.taximaps.server.entity.User;
+import com.taximaps.server.entity.dto.ride.FullRideDto;
+import com.taximaps.server.entity.dto.ride.FullRideInfoDto;
+import com.taximaps.server.entity.dto.ride.RideFormDto;
 import com.taximaps.server.entity.status.RideStatus;
 import com.taximaps.server.mapper.RideMapper;
 import com.taximaps.server.repository.RidesRepository;
+import com.taximaps.server.repository.UserRepository;
 import com.taximaps.server.service.CarService;
 import com.taximaps.server.service.RidesService;
 import lombok.AllArgsConstructor;
@@ -38,14 +42,15 @@ public class RidesServiceImpl implements RidesService {
     private CarService carService;
     private RideMapper rideMapper;
     private MapsApiFacade mapsApiFacade;
-
+    private UserRepository userRepository;
 
     public List<RideEntity> findAll() {
         return ridesRepository.findAll();
     }
 
-    public List<RideEntity> findRidesByUserId(Long id) {
-        return ridesRepository.findRidesByUserId(id);
+    public List<RideEntity> findUserRides(String userName) {
+        User user = userRepository.findByUserName(userName);
+        return ridesRepository.findRidesByUserId(user.getId());
     }
 
     @Override
@@ -53,19 +58,22 @@ public class RidesServiceImpl implements RidesService {
         return ridesRepository.findRideById(id);
     }
 
+    //TODO make class to return price and distance to reuse distance for time of ride
+    //TODO startTime, finishTime, rideTime, rating(1-5)
     @Override
-    public FullRideDto saveRide(RideFormDto rideFormDto, String userName) throws InterruptedException, ApiException, IOException {
-        validateRideFormDto(rideFormDto);
+    public FullRideDto bookRide(RideFormDto rideFormDto, String userName) throws InterruptedException, ApiException, IOException {
+        User user = userRepository.findByUserName(userName);
         rideFormDto.setCarType(rideFormDto.getCarType().toUpperCase());
-        //TODO make class to return price and distance to reuse distance for time of ride
-        //TODO startTime, finishTime, rideTime, rating(1-5)
-        double price = this.roundPrice(rideFormDto);
-        //String timeOfRide = this.calculateTimeOfRide(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType()));
 
-        RideEntity ride = rideMapper.toRideEntity(rideFormDto, userName);
+        double distance = getDistance(rideFormDto.getOrigin(), rideFormDto.getDestination());
+        double price = this.roundPrice(distance, CarType.valueOf(rideFormDto.getCarType()));
+        Car foundCar = carService.findNearestCarToLocationAndType(rideFormDto.getOrigin(), CarType.valueOf(rideFormDto.getCarType()));
+        String timeOfRide = this.calculateTimeOfRide(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType()));
+        String waitingTime = calculateTimeFromDriverToPassenger(rideFormDto.getOrigin(), foundCar.getLocation().getAddress(), CarType.valueOf(rideFormDto.getCarType()));
+
+        RideEntity ride = rideMapper.toRideEntity(rideFormDto,foundCar, user);
         ride.setPrice(price);
         ridesRepository.save(ride);
-
 
         carService.setCarOnWay(ride.getCar(), ride.getStartPoint().getAddress());
         updateRideStatus(RideStatus.RIDE_ASSIGNED_TO_DRIVER, ride.getId());
@@ -73,14 +81,82 @@ public class RidesServiceImpl implements RidesService {
         startRide(ride);
         endRide(ride);
 
-        return rideMapper.toFullRideDto(ride);
+        FullRideDto fullRideDto = rideMapper.toFullRideDto(ride);
+        fullRideDto.setTimeOfRide(timeOfRide);
+        fullRideDto.setWaitingTime(waitingTime);
+        return fullRideDto;
 
     }
 
-    private void validateRideFormDto(RideFormDto rideFormDto) {
-        if(rideFormDto.getOrigin() != null){
+    @Override
+    public FullRideInfoDto getRideInfoBeforeRide(RideFormDto rideFormDto) throws InterruptedException, ApiException, IOException {
+        double rideDistance = getDistance(rideFormDto.getOrigin(), rideFormDto.getDestination());
+        double price = calculatePrice(rideDistance,CarType.valueOf(rideFormDto.getCarType()));
 
+        String timeOfRide = calculateTimeOfRide(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType()));
+
+        FullRideInfoDto infoDto = new FullRideInfoDto();
+        infoDto.setStartPoint(rideFormDto.getOrigin());
+        infoDto.setDestination(rideFormDto.getDestination());
+        infoDto.setTimeOfRide(timeOfRide);
+        infoDto.setPrice(price);
+        return infoDto;
+    }
+
+    @Override
+    public void updateRideStatus(RideStatus status, Long rideId) {
+        RideEntity rideEntity = ridesRepository.findRideById(rideId);
+        rideEntity.setStatus(status);
+        ridesRepository.save(rideEntity);
+    }
+
+    //TODO make rating menu after ride is ended button
+
+    @Override
+    public void updateRideRating(Long rideId, int rating) {
+        RideEntity ride = ridesRepository.findRideById(rideId);
+        ride.setRating(rating);
+        ridesRepository.save(ride);
+    }
+    @Override
+    public double calculatePrice(double distance, CarType carType) {
+
+        double price = (distance/ KM1) * PRICE_FOR_1_KM;
+
+        switch (carType){
+            case PET:
+                price += PET_PRICE;
+            break;
+            case LUXURY:
+                price += LUXURY_PRICE;
+                break;
+            case GROUP:
+                price += GROUP_PRICE;
+                break;
+            default:
+                price = (distance/KM1) * PRICE_FOR_1_KM;
+                break;
         }
+
+        return price;
+    }
+    @Override
+    public double getDistance(String origin, String dest) throws InterruptedException, ApiException, IOException {
+        return mapsApiFacade.getDriveDistance(origin, dest);
+    }
+
+    @Override
+    public String calculateTimeOfRide(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException {
+        return mapsApiFacade.getDriveTime(origin, dest);
+    }
+
+    @Override
+    public String calculateTimeFromDriverToPassenger(String passengerLocation, String driverLocation, CarType carType) throws InterruptedException, ApiException, IOException {
+        return mapsApiFacade.getDriveTime(driverLocation, passengerLocation);
+    }
+
+    public double roundPrice(double distance, CarType carType) {
+        return Precision.round(calculatePrice(distance, carType), SCALE);
     }
 
     private void endRide(RideEntity ride) {
@@ -105,58 +181,5 @@ public class RidesServiceImpl implements RidesService {
             }
         }, DELAY);
     }
-
-    public double roundPrice(RideFormDto rideFormDto) throws InterruptedException, ApiException, IOException {
-        return Precision.round(this.calculatePrice(rideFormDto.getOrigin(), rideFormDto.getDestination(), CarType.valueOf(rideFormDto.getCarType())), SCALE);
-    }
-
-    @Override
-    public void updateRideStatus(RideStatus status, Long rideId) {
-        RideEntity rideEntity = ridesRepository.findRideById(rideId);
-        rideEntity.setStatus(status);
-        ridesRepository.save(rideEntity);
-    }
-    //TODO make rating menu after ride is ended button
-    @Override
-    public void updateRideRating(Long rideId, int rating) {
-        RideEntity ride = ridesRepository.findRideById(rideId);
-        ride.setRating(rating);
-        ridesRepository.save(ride);
-    }
-
-    @Override
-    public double calculatePrice(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException {
-
-        double distance = mapsApiFacade.getDriveDistance(origin, dest);
-        double price = (distance/ KM1) * PRICE_FOR_1_KM;
-
-        switch (carType){
-            case PET:
-                price += PET_PRICE;
-            break;
-            case LUXURY:
-                price += LUXURY_PRICE;
-                break;
-            case GROUP:
-                price += GROUP_PRICE;
-                break;
-            default:
-                price = (distance/KM1) * PRICE_FOR_1_KM;
-                break;
-        }
-
-        return price;
-    }
-
-    @Override
-    public String calculateTimeOfRide(String origin, String dest, CarType carType) throws InterruptedException, ApiException, IOException {
-        return mapsApiFacade.getDriveTime(origin, dest);
-    }
-
-    @Override
-    public String calculateTimeFromDriverToPassenger(String passengerLocation, String driverLocation, CarType carType) throws InterruptedException, ApiException, IOException {
-        return mapsApiFacade.getDriveTime(driverLocation, passengerLocation);
-    }
-
 
 }

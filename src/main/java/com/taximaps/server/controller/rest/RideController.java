@@ -2,11 +2,10 @@ package com.taximaps.server.controller.rest;
 
 import com.google.maps.errors.ApiException;
 import com.taximaps.server.entity.RideEntity;
-import com.taximaps.server.entity.User;
-import com.taximaps.server.entity.dto.FullRideDto;
-import com.taximaps.server.entity.dto.RideFormDto;
+import com.taximaps.server.entity.dto.ride.FullRideDto;
+import com.taximaps.server.entity.dto.ride.FullRideInfoDto;
+import com.taximaps.server.entity.dto.ride.RideFormDto;
 import com.taximaps.server.service.RidesService;
-import com.taximaps.server.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -26,20 +24,16 @@ import java.util.List;
 @AllArgsConstructor
 public class RideController {
 
-    private UserService userService;
     private RidesService ridesService;
 
     @PostMapping(value = "/rides", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public FullRideDto createRide(@RequestBody @Valid RideFormDto rideFormDto, Authentication authentication) throws InterruptedException, ApiException, IOException {
-        String name = authentication.getName();
-        return ridesService.saveRide(rideFormDto, name);
+    public FullRideDto createRide(@RequestBody @Valid RideFormDto rideFormDto, Authentication auth) throws InterruptedException, ApiException, IOException {
+        return ridesService.bookRide(rideFormDto, auth.getName());
     }
 
     @GetMapping("/rides/all")
-    public List<RideEntity> getRidesList(HttpServletRequest req) {
-        User user = getUser(req);
-        return ridesService.findRidesByUserId(user.getId());
-
+    public List<RideEntity> getUserRidesList(Authentication auth) {
+        return ridesService.findUserRides(auth.getName());
     }
 
     @GetMapping("/rides/{id}")
@@ -47,9 +41,9 @@ public class RideController {
         return ridesService.findRideById(id);
     }
 
-    private User getUser(HttpServletRequest req) {
-        String userName = req.getUserPrincipal().getName();
-        return (User) userService.loadUserByUsername(userName);
+    @PostMapping("/rides/info")
+    public FullRideInfoDto getInfoBeforeRide(@RequestBody @Valid RideFormDto rideFormDto) throws InterruptedException, ApiException, IOException {
+        return ridesService.getRideInfoBeforeRide(rideFormDto);
     }
 
 }

@@ -4,7 +4,7 @@ import com.taximaps.server.entity.Car;
 import com.taximaps.server.entity.CarType;
 import com.taximaps.server.entity.Location;
 import com.taximaps.server.entity.User;
-import com.taximaps.server.entity.dto.CarDto;
+import com.taximaps.server.entity.dto.car.CarDto;
 import com.taximaps.server.entity.status.CarStatus;
 import com.taximaps.server.mapper.CarMapper;
 import com.taximaps.server.mapper.LocationMapper;

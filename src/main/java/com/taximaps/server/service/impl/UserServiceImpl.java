@@ -2,7 +2,7 @@ package com.taximaps.server.service.impl;
 
 import com.taximaps.server.entity.Role;
 import com.taximaps.server.entity.User;
-import com.taximaps.server.entity.dto.UserDto;
+import com.taximaps.server.entity.dto.user.UserDto;
 import com.taximaps.server.mapper.UserMapper;
 import com.taximaps.server.repository.UserRepository;
 import com.taximaps.server.service.UserService;

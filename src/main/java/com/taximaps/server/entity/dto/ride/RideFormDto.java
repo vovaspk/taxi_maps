@@ -1,4 +1,4 @@
-package com.taximaps.server.entity.dto;
+package com.taximaps.server.entity.dto.ride;
 
 import lombok.Data;
 

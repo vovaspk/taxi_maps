@@ -1,4 +1,4 @@
-package com.taximaps.server.entity.dto;
+package com.taximaps.server.entity.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

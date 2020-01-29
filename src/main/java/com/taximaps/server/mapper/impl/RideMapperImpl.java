@@ -2,16 +2,13 @@ package com.taximaps.server.mapper.impl;
 
 import com.google.maps.errors.ApiException;
 import com.taximaps.server.entity.Car;
-import com.taximaps.server.entity.CarType;
 import com.taximaps.server.entity.RideEntity;
 import com.taximaps.server.entity.User;
-import com.taximaps.server.entity.dto.FullRideDto;
-import com.taximaps.server.entity.dto.RideFormDto;
+import com.taximaps.server.entity.dto.ride.FullRideDto;
+import com.taximaps.server.entity.dto.ride.RideFormDto;
 import com.taximaps.server.entity.status.RideStatus;
 import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.mapper.RideMapper;
-import com.taximaps.server.repository.UserRepository;
-import com.taximaps.server.service.CarService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,23 +18,16 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.taximaps.server.entity.RideEntity.*;
+import static com.taximaps.server.entity.RideEntity.builder;
 
 @Component
 @AllArgsConstructor
 public class RideMapperImpl implements RideMapper {
 
-    private UserRepository userRepository;
-    private CarService carService;
     private LocationMapper locationMapper;
 
-
     @Override
-    public RideEntity toRideEntity(RideFormDto rideFormDto, String userName) throws InterruptedException, ApiException, IOException {
-
-        User user = userRepository.findByUserName(userName);
-        Car foundCar = carService.findNearestCarToLocationAndType(rideFormDto.getOrigin(), CarType.valueOf(rideFormDto.getCarType()));
-
+    public RideEntity toRideEntity(RideFormDto rideFormDto, Car foundCar, User user) throws InterruptedException, ApiException, IOException {
 
         return builder()
                 .rideTime(Time.valueOf(LocalTime.now()))
@@ -68,7 +58,7 @@ public class RideMapperImpl implements RideMapper {
     @Override
     public FullRideDto toFullRideDto(RideEntity ride) {
         FullRideDto fullRideDto = new FullRideDto();
-        fullRideDto.setRideTime(ride.getRideTime().toString());
+        fullRideDto.setRideTimeStarted(ride.getRideTime().toString());
         fullRideDto.setRideDate(ride.getRideDate().toString());
         fullRideDto.setStartPoint(ride.getStartPoint());
         fullRideDto.setDestination(ride.getDestination());
@@ -77,4 +67,5 @@ public class RideMapperImpl implements RideMapper {
         fullRideDto.setPrice(ride.getPrice());
         return fullRideDto;
     }
+
 }
