@@ -5,8 +5,6 @@ import com.taximaps.server.entity.Location;
 import com.taximaps.server.entity.status.RideStatus;
 import lombok.Data;
 
-import java.sql.Time;
-
 @Data
 public class FullRideDto {
     private String rideTimeStarted;

@@ -43,7 +43,6 @@ public class RideControllerTest {
     private static final Long USER_ID = 1L;
     private static final Long RIDE_ID = 1L;
     private static final String USER_PASSWORD = "1";
-    private static final String TEST_ENCRIPTED_PASSWORD = "$2a$08$SEG3LpMLrSmNJ7lDHp9Yo.RqP6XOziBjQhlup74ZrIMxfkS58E7AW";
     private static final String ORIGIN = "origin";
     private static final String DESTINATION = "destination";
     private static final String CAR_TYPE = "ORDINARY";

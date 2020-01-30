@@ -90,6 +90,7 @@ public class RidesServiceImpl implements RidesService {
 
     @Override
     public FullRideInfoDto getRideInfoBeforeRide(RideFormDto rideFormDto) throws InterruptedException, ApiException, IOException {
+        rideFormDto.setCarType(rideFormDto.getCarType().toUpperCase());
         double rideDistance = getDistance(rideFormDto.getOrigin(), rideFormDto.getDestination());
         double price = calculatePrice(rideDistance,CarType.valueOf(rideFormDto.getCarType()));
 
