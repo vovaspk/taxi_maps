@@ -18,7 +18,6 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.taximaps.server.entity.RideEntity.builder;
 
 @Component
 @AllArgsConstructor
@@ -29,7 +28,7 @@ public class RideMapperImpl implements RideMapper {
     @Override
     public RideEntity toRideEntity(RideFormDto rideFormDto, Car foundCar, User user) throws InterruptedException, ApiException, IOException {
 
-        return builder()
+        return RideEntity.builder()
                 .rideTime(Time.valueOf(LocalTime.now()))
                 .rideDate(rideFormDto.getDate())
                 .user(user)
