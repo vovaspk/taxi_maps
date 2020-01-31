@@ -7,11 +7,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.sql.Time;
 import java.util.Date;
 
-import static org.hibernate.annotations.CascadeType.*;
+import static org.hibernate.annotations.CascadeType.SAVE_UPDATE;
 
 @Entity
 @Data

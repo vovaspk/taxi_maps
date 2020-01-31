@@ -4,7 +4,6 @@ import com.taximaps.server.entity.Role;
 import com.taximaps.server.entity.User;
 import com.taximaps.server.mapper.impl.UserMapperImpl;
 import com.taximaps.server.repository.UserRepository;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
