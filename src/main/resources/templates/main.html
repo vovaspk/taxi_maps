@@ -25,6 +25,10 @@
         #input-form{
             margin-top: 30px;
         }
+        #toggleTraffic{
+            margin-top:30px;
+            margin-left:12px;
+        }
         #description {
             font-family: Roboto;
             font-size: 15px;
@@ -128,7 +132,9 @@
         <button id="submitbtn" type="button">Book</button>
     </form>
 </div>
-
+<div id="trafficB">
+    <button id="toggleTraffic" type="button">Enable traffic</button>
+</div>
 <div id="infoRide">
     <div id="rideTime" class="d-none">
         <p>Ride time:</p> <p id="rideTimeP"></p>
@@ -148,10 +154,10 @@
 </div>
 
 <div id="fullInfoRide">
-    <div id="startPointInfo">From: </div>
-    <div id="destinationInfo">To: </div>
-    <div id="priceInfo">Price: </div>
-    <div id="timeOfRideInfo">Time of ride: </div>
+    <div id="startPointInfo" class="d-none">From: </div>
+    <div id="destinationInfo" class="d-none">To: </div>
+    <div id="priceInfo" class="d-none">Price: </div>
+    <div id="timeOfRideInfo" class="d-none">Time of ride: </div>
 </div>
 
 <div class="pac-card" id="pac-card">
@@ -174,6 +180,7 @@
     var map;
     var directionsService;
     var directionsRenderer;
+    var trafficLayer;
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 49.2331, lng: 28.4682},
@@ -186,6 +193,10 @@
         var strictBounds = document.getElementById('strict-bounds-selector');
          directionsService = new google.maps.DirectionsService();
          directionsRenderer = new google.maps.DirectionsRenderer();
+
+         trafficLayer = new google.maps.TrafficLayer();
+         google.maps.event.addDomListener(document.getElementById('toggleTraffic'), 'click', toggleTraffic);
+
 
         directionsRenderer.setMap(map);
 
@@ -270,6 +281,17 @@
             });
 
     }
+
+    function toggleTraffic() {
+        if (trafficLayer.getMap() == null) {
+        //traffic layer is disabled.. enable it
+        trafficLayer.setMap(map);
+    } else {
+        //traffic layer is enabled.. disable it
+        trafficLayer.setMap(null);
+        }
+    }
+
     var infoWindow = new google.maps.InfoWindow;
 
     // Try HTML5 geolocation.

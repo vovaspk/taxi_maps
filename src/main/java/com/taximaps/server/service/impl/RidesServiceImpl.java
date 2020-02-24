@@ -58,7 +58,6 @@ public class RidesServiceImpl implements RidesService {
         return ridesRepository.findRideById(id);
     }
 
-    //TODO make class to return price and distance to reuse distance for time of ride
     //TODO startTime, finishTime, rideTime, rating(1-5)
     @Override
     public FullRideDto bookRide(RideFormDto rideFormDto, String userName) throws InterruptedException, ApiException, IOException {
