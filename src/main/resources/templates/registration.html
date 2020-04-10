@@ -275,7 +275,7 @@
 
 
                 <div class="wrap-input100 validate-input m-b-16" data-validate="Username is required">
-                    <input class="input100" type="text" th:value="*{userName}" name="userName" placeholder="Username">
+                    <input class="input100" type="text" th:value="*{username}" name="userName" placeholder="Username">
                     <span class="focus-input100"></span>
                 </div>
 
@@ -299,6 +299,11 @@
 <!--                            Remember me-->
 <!--                        </label>-->
 <!--                    </div>-->
+                    <input  id="DRIVER" type="radio" th:field="${user.roles}" name="register_role" placeholder="Driver" th:value="${role_driver}" value="DRIVER">
+                    <label for="DRIVER">Driver</label>
+
+                    <input  id=USER type="radio" th:field="${user.roles}" name="register_role" placeholder="User" th:value="${role_user}" value="USER">
+                    <label for="USER">User</label>
 
                     <div>
                         <a href="/login" class="txt1">

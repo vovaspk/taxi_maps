@@ -30,6 +30,7 @@ public class User extends AbstractEntity implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name="user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+    //private Location location;
 
     public void setUserName(String userName) {
         this.userName = userName;

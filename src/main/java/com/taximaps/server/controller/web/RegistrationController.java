@@ -1,5 +1,6 @@
 package com.taximaps.server.controller.web;
 
+import com.taximaps.server.entity.Role;
 import com.taximaps.server.entity.User;
 import com.taximaps.server.service.UserService;
 import com.taximaps.server.service.impl.UserServiceImpl;
@@ -27,6 +28,8 @@ public class RegistrationController {
     @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("user", new User());
+        model.addAttribute("role_user", Role.USER);
+        model.addAttribute("role_driver", Role.DRIVER);
         return PagesConstants.REGISTRATION_PAGE;
     }
 
@@ -45,3 +48,12 @@ public class RegistrationController {
     }
 
 }
+//TODO create plan what app should be and how to reproduce it step by step by step
+// 1. ssl certificate for https,
+// 2. ssl for driver module and for geolocation of users
+// 3. test endpoint to view path
+// 4. algorithm [0], [1], [2] choose different paths, result[1] check difference
+// 5. algorithm a* run and add  koefs, how much snow road koef, death rate koef, bad road koef, traffic(ready)
+// 6.for geolocation of users
+// 7. if have time saved places
+// navbar for drivers should be different from usersbar, links are wrong

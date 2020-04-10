@@ -33,10 +33,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                     .antMatchers("/login","/registration", "/resources**", "/activate/*").permitAll()
+                    .antMatchers("/drivers/home", "/resources**").hasAuthority("DRIVER")
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
                     .loginPage("/login")
+                    .successHandler(new AuthSuccessHandler())
                     .permitAll()
                 .and()
                     .logout()

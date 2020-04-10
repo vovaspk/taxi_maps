@@ -34,7 +34,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
+        if (!user.getRoles().contains(Role.DRIVER)) {
+            user.setRoles(Collections.singleton(Role.USER));
+        }
         userRepository.save(user);
 
         return true;
