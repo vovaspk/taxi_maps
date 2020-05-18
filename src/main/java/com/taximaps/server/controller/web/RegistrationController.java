@@ -49,11 +49,11 @@ public class RegistrationController {
 
 }
 //TODO create plan what app should be and how to reproduce it step by step by step
-// 1. ssl certificate for https,
-// 2. ssl for driver module and for geolocation of users
+// 1. ssl certificate for https, DONE----------------------------------------------------------------------------------
+// 2. ssl for driver module and for geolocation of users DONE----------------------------------------------------------
 // 3. test endpoint to view path
 // 4. algorithm [0], [1], [2] choose different paths, result[1] check difference
 // 5. algorithm a* run and add  koefs, how much snow road koef, death rate koef, bad road koef, traffic(ready)
-// 6.for geolocation of users
+// 6.for geolocation of users DONE--------------------------------maybe add user geo instead of choosing address option
 // 7. if have time saved places
-// navbar for drivers should be different from usersbar, links are wrong
+// driverId in ride table connects to driverRides table (userId (driverId) | rideId)

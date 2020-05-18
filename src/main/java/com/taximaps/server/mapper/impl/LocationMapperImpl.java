@@ -19,7 +19,7 @@ public class LocationMapperImpl implements LocationMapper {
     private MapsApiFacade mapsApiFacade;
 
     @Override
-    public String toStringLocation(double lat, double lng) throws InterruptedException, ApiException, IOException {
+    public String toStringLocation(double lat, double lng) {
         Location location = new Location();
         String address = toAddressLocation(lat, lng);
         location.setLat(lat);
@@ -29,8 +29,13 @@ public class LocationMapperImpl implements LocationMapper {
     }
 
     @Override
-    public String toAddressLocation(double lat, double lng) throws InterruptedException, ApiException, IOException {
-        return mapsApiFacade.getAddressLocationFromCoords(lat, lng);
+    public String toAddressLocation(double lat, double lng)  {
+        try {
+            return mapsApiFacade.getAddressLocationFromCoords(lat, lng);
+        } catch (InterruptedException | ApiException | IOException e) {
+            e.printStackTrace();
+        }
+        return "Cannot find address for this location";
     }
 
     //check if coords already exists in db then get from db end return it

@@ -31,13 +31,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .requiresChannel()
-                .anyRequest()
-                .requiresSecure()
-                    .and()
                 .authorizeRequests()
-                    .antMatchers("/login","/registration", "/resources**", "/activate/*").permitAll()
-                    .antMatchers("/drivers/home", "/resources**").hasAuthority("DRIVER")
+                    .antMatchers("/login","/registration", "/resources/**", "/activate/*", "/static/**", "/**.js").permitAll()
+                    .antMatchers("/drivers/home", "/resources/**").hasAuthority("DRIVER")
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()

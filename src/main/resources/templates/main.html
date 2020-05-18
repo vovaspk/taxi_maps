@@ -8,6 +8,7 @@
     <script src="jquery-3.4.1.min.js"></script>
     <script src="main.js"></script>
     <script src="rideCreator.js"></script>
+    <script src="userGeo.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
         /* Always set the map height explicitly to define the size of the div
@@ -181,11 +182,13 @@
     var directionsService;
     var directionsRenderer;
     var trafficLayer;
+
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 49.2331, lng: 28.4682},
+            /*center: {lat: 49.2331, lng: 28.4682},*/
             zoom: 13
         });
+        initGeo();
         var card = document.getElementById('pac-card');
         var input = document.getElementById('pac-input');
         var dest = document.getElementById('pac-dest');
@@ -292,36 +295,39 @@
         }
     }
 
-    var infoWindow = new google.maps.InfoWindow;
 
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
 
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
-            infoWindow.open(map);
-            map.setCenter(pos);
-        }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-        });
-    } else {
-        // Browser doesn't support Geolocation
-        //console.log('geolocation doesn't work');
-        handleLocationError(false, infoWindow, map.getCenter());
+    function initGeo(){
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                console.log(pos.lat);
+                console.log(pos.lng);
 
-    }
+                updateUserGeo(pos);
+                map.setCenter(pos);
+                var marker = new google.maps.Marker({
+                    icon: {
+                        url: "https://localhost:8443/personIcon.png"
+                    },
+                    animation: google.maps.Animation.DROP,
+                    position: new google.maps.LatLng(pos.lat, pos.lng),
+                    map:map
+                });
+            }, function() {
+                console.log('geolocation doesnt work');
+            });
+        } else {
+            // Browser doesn't support Geolocation
+            console.log('geolocation doesnt work');
 
-    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-            'Error: The Geolocation service failed.' :
-            'Error: Your browser doesn\'t support geolocation.');
-        infoWindow.open(map);
+
+        }
+
     }
 </script>
 

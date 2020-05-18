@@ -43,6 +43,7 @@ public class MainControllerTest {
     private static final String user_password_hashed = "$2a$08$zR2XQakN5rDX4RCFoy8c/ec90VxKrGjHJ4cIoND5ceBhqEmtqIuKy";
     private static final String user_password = "1111";
     private static final String user_name = "vova";
+    public static final String HTTPS_LOCALHOST_LOGIN = "https://localhost/login";
 
     @MockBean
     private UserServiceImpl userService;
@@ -96,7 +97,7 @@ public class MainControllerTest {
                 .perform(get("/map")
                         .contentType("text/html"))
                 .andExpect(status().is(302))
-                .andExpect(redirectedUrl("http://localhost/login"));
+                .andExpect(redirectedUrl(HTTPS_LOCALHOST_LOGIN));
     }
 
 
@@ -114,7 +115,7 @@ public class MainControllerTest {
         mockMvc.perform(formLogin().user(user_name).password("1111"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"))
+                .andExpect(redirectedUrl(HTTPS_LOCALHOST_LOGIN))
         .andExpect(authenticated().withUsername(user_name));
         //mockMvc.perform(get("/map").contentType("text/html")).andExpect(status().isOk());
     }
@@ -143,7 +144,7 @@ public class MainControllerTest {
         mockMvc.perform(formLogin().user(user_name).password("1111"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"))
+                .andExpect(redirectedUrl(HTTPS_LOCALHOST_LOGIN))
                 .andExpect(authenticated().withUsername(user_name));
 
 

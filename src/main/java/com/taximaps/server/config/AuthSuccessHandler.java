@@ -50,7 +50,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
         Map<String, String> roleTargetUrlMap = new HashMap<>();
         roleTargetUrlMap.put("USER", "/");
-        roleTargetUrlMap.put("DRIVER", "/drivers/home");
+        roleTargetUrlMap.put("DRIVER", "/drivers");
 
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {

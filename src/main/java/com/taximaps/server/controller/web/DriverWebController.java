@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class DriverWebController {
 
-    @GetMapping(value = {"/drivers/home"}, produces = "text/html")
+    @GetMapping(value = {"/drivers"}, produces = "text/html")
     public String map(Model model) {
         return PagesConstants.DRIVER_HOME_PAGE;
     }

@@ -41,7 +41,7 @@ function getCars() {
         data.forEach(car => {
         var marker = new google.maps.Marker({
                                 icon: {
-                                    url: "http://maps.google.com/mapfiles/kml/pal4/icon15.png"
+                                    url: "https://maps.google.com/mapfiles/kml/pal4/icon15.png"
                                 },
                                 animation: google.maps.Animation.DROP,
                                 position: new google.maps.LatLng(car.location.lat, car.location.lng),
@@ -92,7 +92,7 @@ function updatePositionCars() {
     });
 }
 
-function findNearestCar(data, suc) {
+function findNearestfCar(data, suc) {
     $.ajax({
         type: "GET",
         url: "/cars/find",

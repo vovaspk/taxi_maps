@@ -1,13 +1,17 @@
 package com.taximaps.server.service.impl;
 
+import com.taximaps.server.entity.Location;
 import com.taximaps.server.entity.Role;
 import com.taximaps.server.entity.User;
 import com.taximaps.server.entity.dto.user.UserDto;
+import com.taximaps.server.mapper.LocationMapper;
 import com.taximaps.server.mapper.UserMapper;
+import com.taximaps.server.repository.LocationRepository;
 import com.taximaps.server.repository.UserRepository;
 import com.taximaps.server.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +30,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private UserMapper userMapper;
+    private LocationRepository locationRepository;
+    private LocationMapper locationMapper;
 
     public boolean addUser(User user){
         User userFromDB = userRepository.findByUserName(user.getUsername());
@@ -79,6 +86,22 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public User getUserById(Long id) {
         return userRepository.findUserById(id);
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public void updateUserGeo(Authentication authentication, Location location) {
+        User user = userRepository.findByUserName(authentication.getName());
+
+        Location foundOrCreatedLocation = locationMapper.fromCoordsToLocation(location.toStringLatLng());
+
+        user.setLocation(foundOrCreatedLocation);
+
+        userRepository.save(user);
     }
 
 

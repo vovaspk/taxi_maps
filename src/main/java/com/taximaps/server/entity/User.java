@@ -14,6 +14,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.util.Collection;
 import java.util.Set;
 
@@ -30,7 +31,9 @@ public class User extends AbstractEntity implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name="user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
-    //private Location location;
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
 
     public void setUserName(String userName) {
         this.userName = userName;

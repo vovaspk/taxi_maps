@@ -33,4 +33,8 @@ public class Location extends AbstractEntity{
     public String toString() {
         return lat + "," + lng + ", " + address;
     }
+
+    public String toStringLatLng(){
+        return lat + "," + lng ;
+    }
 }
