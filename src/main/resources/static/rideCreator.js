@@ -96,6 +96,8 @@ $(document).ready(
                 function(response, status) {
                     if (status === 'OK') {
                         console.log('goes to here 3');
+                        console.log(response.routes[0].legs[0].duration.text);
+                        console.log(response.routes[0].legs[0].distance);
                         directionsRenderer.setDirections(response);
 
                     } else {

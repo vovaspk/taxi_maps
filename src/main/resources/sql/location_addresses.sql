@@ -1,5 +1,6 @@
 insert into taxi_maps.location (id, address, lat, lng)
 values
+(1, 'Kosmonavtiv Avenue, 65, Vinnytsia, Vinnyts''ka Oblast, Ukraine', 49.221979, 29.422250),
 (2, 'Keletska Street, 87, Vinnytsia, Vinnyts''ka oblast, Ukraine', 49.2251249 , 28.4079674),
 (3, 'Keletska Street, 31, Vinnytsia, Vinnyts''ka oblast, Ukraine' ,49.2256954, 28.4404962),
 (4, 'Pyrohova St, 16а, Vinnytsia, Vinnyts''ka oblast, Ukraine' ,49.2327425, 28.4530055 ),

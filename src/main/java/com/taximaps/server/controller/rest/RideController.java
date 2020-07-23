@@ -46,4 +46,14 @@ public class RideController {
         return ridesService.getRideInfoBeforeRide(rideFormDto);
     }
 
+    @PostMapping("/rides/first")
+    public String getFirstRoute(@RequestBody @Valid RideFormDto rideFormDto){
+        return ridesService.getFirstRoute(rideFormDto);
+    }
+
+    @PostMapping("/rides/second")
+    public String getSecondRoute(@RequestBody @Valid RideFormDto rideFormDto){
+        return ridesService.getSecondRoute(rideFormDto);
+    }
+
 }

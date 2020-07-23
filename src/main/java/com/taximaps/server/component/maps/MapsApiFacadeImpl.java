@@ -26,4 +26,14 @@ public class MapsApiFacadeImpl implements MapsApiFacade {
     public String getAddressLocationFromCoords(double lat, double lng) throws InterruptedException, ApiException, IOException {
         return JsonReader.getAddressLocationFromCoords(lat, lng);
     }
+
+    @Override
+    public String getDirectionFirstWithIndicators(String startAddress, String endAddress) throws InterruptedException, ApiException, IOException {
+        return JsonReader.getDirectionFirst(startAddress,endAddress);
+    }
+
+    @Override
+    public String getDirectionwithoutIndicators(String startAddress, String endAddress) throws InterruptedException, ApiException, IOException {
+        return JsonReader.getDirectionSecond(startAddress,endAddress);
+    }
 }

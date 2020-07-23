@@ -13,4 +13,8 @@ public interface MapsApiFacade {
     String getGeocodeCoordinates(String address);
 
     String getAddressLocationFromCoords(double lat, double lng) throws InterruptedException, ApiException, IOException;
+
+    String getDirectionFirstWithIndicators(String startAddress, String endAddress) throws InterruptedException, ApiException, IOException;
+
+    String getDirectionwithoutIndicators(String startAddress, String endAddress) throws InterruptedException, ApiException, IOException;
 }

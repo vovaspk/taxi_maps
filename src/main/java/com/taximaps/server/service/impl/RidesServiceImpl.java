@@ -53,9 +53,39 @@ public class RidesServiceImpl implements RidesService {
         return ridesRepository.findRidesByUserId(user.getId());
     }
 
+
+
     @Override
     public RideEntity findRideById(Long id) {
         return ridesRepository.findRideById(id);
+    }
+
+    @Override
+    public String getFirstRoute(RideFormDto rideFormDto)  {
+        try {
+            return mapsApiFacade.getDirectionFirstWithIndicators(rideFormDto.getOrigin(), rideFormDto.getDestination());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ApiException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "error happend";
+    }
+
+    @Override
+    public String getSecondRoute(RideFormDto rideFormDto)  {
+        try {
+            return mapsApiFacade.getDirectionwithoutIndicators(rideFormDto.getOrigin(), rideFormDto.getDestination());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ApiException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "error happend";
     }
 
     //TODO startTime, finishTime, rideTime, rating(1-5)

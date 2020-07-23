@@ -1,16 +1,8 @@
 package com.taximaps.server.component.maps;
 
-import com.google.maps.DirectionsApi;
-import com.google.maps.DistanceMatrixApi;
-import com.google.maps.DistanceMatrixApiRequest;
-import com.google.maps.GeoApiContext;
-import com.google.maps.GeocodingApi;
-import com.google.maps.GeocodingApiRequest;
+import com.google.maps.*;
 import com.google.maps.errors.ApiException;
-import com.google.maps.model.DistanceMatrix;
-import com.google.maps.model.GeocodingResult;
-import com.google.maps.model.LatLng;
-import com.google.maps.model.TravelMode;
+import com.google.maps.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +38,34 @@ public class JsonReader {
 
         return result.rows[0].elements[0].duration.toString();
 
+    }
+
+    public static String getDirectionFirst(String startAddress, String endAddress) throws InterruptedException, ApiException, IOException {
+        DirectionsApiRequest req = DirectionsApi.newRequest(getGeoContext());
+        DirectionsResult result = req
+                .origin(startAddress)
+                .destination(endAddress)
+                .mode(TravelMode.DRIVING)
+                .alternatives(true)
+                .avoid(DirectionsApi.RouteRestriction.TOLLS)
+                .language("en-US")
+                .await();
+
+        return result.routes[0].toString();
+    }
+
+    public static String getDirectionSecond(String startAddress, String endAddress) throws InterruptedException, ApiException, IOException {
+        DirectionsApiRequest req = DirectionsApi.newRequest(getGeoContext());
+        DirectionsResult result = req
+                .origin(startAddress)
+                .destination(endAddress)
+                .mode(TravelMode.DRIVING)
+                .alternatives(true)
+                .avoid(DirectionsApi.RouteRestriction.TOLLS)
+                .language("en-US")
+                .await();
+
+        return result.routes[1].toString();
     }
 
     public static String getGeocodeCoordinates(String address)  {
